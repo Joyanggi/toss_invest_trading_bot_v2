@@ -1,0 +1,2421 @@
+{
+  "generatedAt": "2026-07-15T06:20:22.164Z",
+  "methodology": {
+    "objective": "공식 포인트인타임 대형주 팩터 포트폴리오로 SPY 장기 복리수익 초과",
+    "source": "Kenneth R. French Data Library, CRSP 기반 미국 연구 포트폴리오",
+    "portfolioConstruction": "NYSE 크기 5분위의 대형주 그룹과 각 팩터 상위 포트폴리오의 가치가중 월수익률",
+    "factorDefinitions": {
+      "momentum": "Size 5 / Prior 12-2 High",
+      "profitability": "Size 5 / Operating Profitability High",
+      "value": "Size 5 / Book-to-Market High",
+      "investment": "Size 5 / Investment Low"
+    },
+    "modernComparison": {
+      "benchmark": "SPY Yahoo Finance adjusted monthly close returns",
+      "from": "199302",
+      "to": "202605",
+      "months": 400
+    },
+    "externalLongHistoryDiagnostic": {
+      "benchmark": "Fama-French U.S. market return, Mkt-RF + RF",
+      "from": "196307",
+      "to": "199212",
+      "months": 354
+    },
+    "implementationDrag": {
+      "baseAnnualPct": 0.5,
+      "stressAnnualPct": 1,
+      "baseSleeveTurnoverCostPerOneWayPct": 0.1,
+      "stressSleeveTurnoverCostPerOneWayPct": 0.2,
+      "treatment": "모든 전략에 연율 드래그를 복리 차감하고, 월별 팩터 비중 변화에는 별도 단방향 회전율 비용을 차감",
+      "warning": "실제 종목별 회전율·스프레드·세금으로 계산한 비용이 아니라 연구 포트폴리오의 비투자성을 보수적으로 보정한 가정"
+    },
+    "timing": "정적 팩터는 월별 동일비중 리밸런싱, 동적 전략은 직전 12개월만 사용해 다음 달 상위 2팩터 보유",
+    "segments": [
+      {
+        "id": "development",
+        "start": "199302",
+        "end": "200412"
+      },
+      {
+        "id": "validation",
+        "start": "200501",
+        "end": "201412"
+      },
+      {
+        "id": "holdout",
+        "start": "201501",
+        "end": "202605"
+      }
+    ],
+    "omitted": [
+      "한국 세금",
+      "원/달러 환율",
+      "실제 종목 단위 주문",
+      "개별 종목별 회전율",
+      "시장충격"
+    ]
+  },
+  "selectionPolicy": {
+    "minimumOverallExcessCagrPct": 1,
+    "minimumSegmentExcessCagrPct": 0,
+    "minimumStressExcessCagrPct": 0,
+    "minimumLongHistoryExcessCagrPct": 0,
+    "minimumRollingFiveYearBeatRatePct": 60,
+    "maximumDrawdownPenaltyPct": 5,
+    "segmentRule": "개발·검증·홀드아웃에서 SPY 대비 CAGR이 모두 0% 초과",
+    "longHistoryRule": "1963~1992 미국 전체시장 대비 CAGR이 0% 초과",
+    "note": "후보·가중치·임계값은 결과 확인 전에 고정"
+  },
+  "dataDiagnostics": {
+    "sources": {
+      "value": {
+        "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/25_Portfolios_5x5_CSV.zip",
+        "sha256": "afc2f6c40237d07b99ab84ab9375a08bc301e3801e3ad8d91aa90d5aa9ec6295",
+        "firstMonth": "192607",
+        "lastMonth": "202605",
+        "monthlyRows": 1199
+      },
+      "profitability": {
+        "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/25_Portfolios_ME_OP_5x5_CSV.zip",
+        "sha256": "e1c3604f34eb5f46973b5f01665d897913f910b3dc6991d54268a4dbad709f8c",
+        "firstMonth": "196307",
+        "lastMonth": "202605",
+        "monthlyRows": 755
+      },
+      "investment": {
+        "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/25_Portfolios_ME_INV_5x5_CSV.zip",
+        "sha256": "b42e90fb6c77becbc880e8f32b0898ae1591797fbda5fc74489f7e735fab398c",
+        "firstMonth": "196307",
+        "lastMonth": "202605",
+        "monthlyRows": 755
+      },
+      "momentum": {
+        "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/25_Portfolios_ME_Prior_12_2_CSV.zip",
+        "sha256": "14cd8754435736a846bd053a1e9a439a91e0a71e3c3f1d5535dd3e185bbc76a4",
+        "firstMonth": "192701",
+        "lastMonth": "202605",
+        "monthlyRows": 1193
+      },
+      "factors": {
+        "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_CSV.zip",
+        "sha256": "80b88699a18ac408e2456d25b1004e340f3f7f8d41d5b476a0285bc53c6f0436",
+        "firstMonth": "192607",
+        "lastMonth": "202605",
+        "monthlyRows": 1199
+      }
+    },
+    "spy": {
+      "source": "Yahoo Finance SPY adjusted daily close aggregated to month-end",
+      "firstMonth": "199301",
+      "lastMonth": "202607",
+      "months": 403,
+      "benchmarkSanity": {
+        "initialClose": 24.113265991210938,
+        "finalClose": 754.5361328125
+      }
+    },
+    "missingModernMonths": [],
+    "missingLongHistoryMonths": []
+  },
+  "candidates": [
+    {
+      "id": "big_momentum",
+      "label": "대형 고모멘텀",
+      "description": "momentum 100%",
+      "weights": {
+        "momentum": 1
+      },
+      "dynamic": false
+    },
+    {
+      "id": "big_profitability",
+      "label": "대형 고수익성",
+      "description": "profitability 100%",
+      "weights": {
+        "profitability": 1
+      },
+      "dynamic": false
+    },
+    {
+      "id": "big_value",
+      "label": "대형 가치",
+      "description": "value 100%",
+      "weights": {
+        "value": 1
+      },
+      "dynamic": false
+    },
+    {
+      "id": "big_conservative_investment",
+      "label": "대형 보수적 투자",
+      "description": "investment 100%",
+      "weights": {
+        "investment": 1
+      },
+      "dynamic": false
+    },
+    {
+      "id": "quality_momentum",
+      "label": "수익성 + 모멘텀",
+      "description": "profitability 50% + momentum 50%",
+      "weights": {
+        "profitability": 0.5,
+        "momentum": 0.5
+      },
+      "dynamic": false
+    },
+    {
+      "id": "quality_value_momentum",
+      "label": "수익성 + 가치 + 모멘텀",
+      "description": "profitability 33.33% + value 33.33% + momentum 33.33%",
+      "weights": {
+        "profitability": 0.3333333333333333,
+        "value": 0.3333333333333333,
+        "momentum": 0.3333333333333333
+      },
+      "dynamic": false
+    },
+    {
+      "id": "balanced_four_factor",
+      "label": "4팩터 동일비중",
+      "description": "profitability 25% + value 25% + momentum 25% + investment 25%",
+      "weights": {
+        "profitability": 0.25,
+        "value": 0.25,
+        "momentum": 0.25,
+        "investment": 0.25
+      },
+      "dynamic": false
+    },
+    {
+      "id": "dynamic_factor_top2",
+      "label": "최근 12개월 상위 2팩터",
+      "description": "직전 12개월 누적수익이 높은 두 대형주 팩터 포트폴리오를 매월 동일비중으로 보유",
+      "weights": null,
+      "dynamic": true
+    }
+  ],
+  "scenarios": {
+    "base": {
+      "annualImplementationDragPct": 0.5,
+      "benchmark": {
+        "id": "spy_total_return",
+        "label": "SPY 수정주가 매수보유",
+        "overall": {
+          "from": "199302",
+          "to": "202605",
+          "months": 400,
+          "endingEquity": 3129132.87,
+          "totalReturnPct": 3029.13,
+          "cagrPct": 10.88,
+          "maxDrawdownPct": 50.78,
+          "annualizedVolatilityPct": 14.77,
+          "sharpe": 0.612,
+          "calmar": 0.214
+        },
+        "segments": {
+          "development": {
+            "from": "199302",
+            "to": "200412",
+            "months": 143,
+            "endingEquity": 338233.85,
+            "totalReturnPct": 238.23,
+            "cagrPct": 10.77,
+            "maxDrawdownPct": 44.73,
+            "annualizedVolatilityPct": 14.6,
+            "sharpe": 0.521,
+            "calmar": 0.241
+          },
+          "validation": {
+            "from": "200501",
+            "to": "201412",
+            "months": 120,
+            "endingEquity": 208166.11,
+            "totalReturnPct": 108.17,
+            "cagrPct": 7.61,
+            "maxDrawdownPct": 50.78,
+            "annualizedVolatilityPct": 14.6,
+            "sharpe": 0.48,
+            "calmar": 0.15
+          },
+          "holdout": {
+            "from": "201501",
+            "to": "202605",
+            "months": 137,
+            "endingEquity": 444423.39,
+            "totalReturnPct": 344.42,
+            "cagrPct": 13.96,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 15.05,
+            "sharpe": 0.819,
+            "calmar": 0.583
+          }
+        }
+      },
+      "candidates": [
+        {
+          "id": "big_momentum",
+          "label": "대형 고모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 4367651.65,
+            "totalReturnPct": 4267.65,
+            "cagrPct": 12,
+            "maxDrawdownPct": 50.53,
+            "annualizedVolatilityPct": 17.23,
+            "sharpe": 0.606,
+            "calmar": 0.237
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 451271.81,
+              "totalReturnPct": 351.27,
+              "cagrPct": 13.48,
+              "maxDrawdownPct": 42.82,
+              "annualizedVolatilityPct": 17.62,
+              "sharpe": 0.597,
+              "calmar": 0.315,
+              "excessCagrPct": 2.71
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 209983.28,
+              "totalReturnPct": 109.98,
+              "cagrPct": 7.7,
+              "maxDrawdownPct": 50.53,
+              "annualizedVolatilityPct": 16.45,
+              "sharpe": 0.45,
+              "calmar": 0.152,
+              "excessCagrPct": 0.09
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 460919.48,
+              "totalReturnPct": 360.92,
+              "cagrPct": 14.32,
+              "maxDrawdownPct": 26.09,
+              "annualizedVolatilityPct": 17.45,
+              "sharpe": 0.746,
+              "calmar": 0.549,
+              "excessCagrPct": 0.36
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.12,
+            "maxDrawdownDifferencePct": -0.25,
+            "trackingErrorPct": 9.6,
+            "informationRatio": 0.145,
+            "activeReturnTStat": 0.839,
+            "rollingFiveYearBeatRatePct": 63.93,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -42.9,
+            "bestRollingFiveYearExcessPct": 120.04
+          },
+          "averageWeightsPct": {
+            "momentum": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_profitability",
+          "label": "대형 고수익성",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3542022.16,
+            "totalReturnPct": 3442.02,
+            "cagrPct": 11.3,
+            "maxDrawdownPct": 41.61,
+            "annualizedVolatilityPct": 14.32,
+            "sharpe": 0.653,
+            "calmar": 0.271
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 313225.71,
+              "totalReturnPct": 213.23,
+              "cagrPct": 10.06,
+              "maxDrawdownPct": 40.4,
+              "annualizedVolatilityPct": 14.17,
+              "sharpe": 0.487,
+              "calmar": 0.249,
+              "excessCagrPct": -0.71
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 236786.88,
+              "totalReturnPct": 136.79,
+              "cagrPct": 9,
+              "maxDrawdownPct": 41.61,
+              "annualizedVolatilityPct": 13.25,
+              "sharpe": 0.613,
+              "calmar": 0.216,
+              "excessCagrPct": 1.39
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 477569.12,
+              "totalReturnPct": 377.57,
+              "cagrPct": 14.68,
+              "maxDrawdownPct": 24.19,
+              "annualizedVolatilityPct": 15.29,
+              "sharpe": 0.849,
+              "calmar": 0.607,
+              "excessCagrPct": 0.72
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.42,
+            "maxDrawdownDifferencePct": -9.17,
+            "trackingErrorPct": 4.53,
+            "informationRatio": 0.067,
+            "activeReturnTStat": 0.388,
+            "rollingFiveYearBeatRatePct": 64.81,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -26.55,
+            "bestRollingFiveYearExcessPct": 49.01
+          },
+          "averageWeightsPct": {
+            "profitability": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_value",
+          "label": "대형 가치",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3539216.32,
+            "totalReturnPct": 3439.22,
+            "cagrPct": 11.29,
+            "maxDrawdownPct": 62.63,
+            "annualizedVolatilityPct": 22.3,
+            "sharpe": 0.485,
+            "calmar": 0.18
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 292747.25,
+              "totalReturnPct": 192.75,
+              "cagrPct": 9.43,
+              "maxDrawdownPct": 62.63,
+              "annualizedVolatilityPct": 20.08,
+              "sharpe": 0.367,
+              "calmar": 0.151,
+              "excessCagrPct": -1.34
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 203572.87,
+              "totalReturnPct": 103.57,
+              "cagrPct": 7.37,
+              "maxDrawdownPct": 52.88,
+              "annualizedVolatilityPct": 21.56,
+              "sharpe": 0.374,
+              "calmar": 0.139,
+              "excessCagrPct": -0.24
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 593874.11,
+              "totalReturnPct": 493.87,
+              "cagrPct": 16.89,
+              "maxDrawdownPct": 39.6,
+              "annualizedVolatilityPct": 24.91,
+              "sharpe": 0.677,
+              "calmar": 0.426,
+              "excessCagrPct": 2.93
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.41,
+            "maxDrawdownDifferencePct": 11.85,
+            "trackingErrorPct": 14.01,
+            "informationRatio": 0.127,
+            "activeReturnTStat": 0.732,
+            "rollingFiveYearBeatRatePct": 32.26,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -78.11,
+            "bestRollingFiveYearExcessPct": 146.62
+          },
+          "averageWeightsPct": {
+            "value": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_conservative_investment",
+          "label": "대형 보수적 투자",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 4316802.94,
+            "totalReturnPct": 4216.8,
+            "cagrPct": 11.96,
+            "maxDrawdownPct": 53.11,
+            "annualizedVolatilityPct": 15.7,
+            "sharpe": 0.646,
+            "calmar": 0.225
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 475747.51,
+              "totalReturnPct": 375.75,
+              "cagrPct": 13.98,
+              "maxDrawdownPct": 30.02,
+              "annualizedVolatilityPct": 15.09,
+              "sharpe": 0.701,
+              "calmar": 0.466,
+              "excessCagrPct": 3.21
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 252989.79,
+              "totalReturnPct": 152.99,
+              "cagrPct": 9.73,
+              "maxDrawdownPct": 53.11,
+              "annualizedVolatilityPct": 15.84,
+              "sharpe": 0.579,
+              "calmar": 0.183,
+              "excessCagrPct": 2.12
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 358659.81,
+              "totalReturnPct": 258.66,
+              "cagrPct": 11.84,
+              "maxDrawdownPct": 20.85,
+              "annualizedVolatilityPct": 16.17,
+              "sharpe": 0.653,
+              "calmar": 0.568,
+              "excessCagrPct": -2.12
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.08,
+            "maxDrawdownDifferencePct": 2.33,
+            "trackingErrorPct": 7.68,
+            "informationRatio": 0.144,
+            "activeReturnTStat": 0.832,
+            "rollingFiveYearBeatRatePct": 63.64,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -47.63,
+            "bestRollingFiveYearExcessPct": 69.12
+          },
+          "averageWeightsPct": {
+            "investment": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "quality_momentum",
+          "label": "수익성 + 모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 4089392.63,
+            "totalReturnPct": 3989.39,
+            "cagrPct": 11.78,
+            "maxDrawdownPct": 46.18,
+            "annualizedVolatilityPct": 15.08,
+            "sharpe": 0.656,
+            "calmar": 0.255
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 383756.89,
+              "totalReturnPct": 283.76,
+              "cagrPct": 11.95,
+              "maxDrawdownPct": 41.11,
+              "annualizedVolatilityPct": 14.9,
+              "sharpe": 0.584,
+              "calmar": 0.291,
+              "excessCagrPct": 1.18
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 224664.81,
+              "totalReturnPct": 124.66,
+              "cagrPct": 8.43,
+              "maxDrawdownPct": 46.18,
+              "annualizedVolatilityPct": 14.43,
+              "sharpe": 0.538,
+              "calmar": 0.183,
+              "excessCagrPct": 0.82
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 474315.77,
+              "totalReturnPct": 374.32,
+              "cagrPct": 14.61,
+              "maxDrawdownPct": 23.5,
+              "annualizedVolatilityPct": 15.77,
+              "sharpe": 0.825,
+              "calmar": 0.622,
+              "excessCagrPct": 0.65
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.9,
+            "maxDrawdownDifferencePct": -4.6,
+            "trackingErrorPct": 5.73,
+            "informationRatio": 0.148,
+            "activeReturnTStat": 0.856,
+            "rollingFiveYearBeatRatePct": 82.99,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -27.98,
+            "bestRollingFiveYearExcessPct": 62.38
+          },
+          "averageWeightsPct": {
+            "profitability": 50,
+            "momentum": 50
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "quality_value_momentum",
+          "label": "수익성 + 가치 + 모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 4318474.72,
+            "totalReturnPct": 4218.47,
+            "cagrPct": 11.96,
+            "maxDrawdownPct": 47.54,
+            "annualizedVolatilityPct": 16.02,
+            "sharpe": 0.637,
+            "calmar": 0.252
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 363872.61,
+              "totalReturnPct": 263.87,
+              "cagrPct": 11.45,
+              "maxDrawdownPct": 43.79,
+              "annualizedVolatilityPct": 14.93,
+              "sharpe": 0.554,
+              "calmar": 0.261,
+              "excessCagrPct": 0.68
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 222787.19,
+              "totalReturnPct": 122.79,
+              "cagrPct": 8.34,
+              "maxDrawdownPct": 47.54,
+              "annualizedVolatilityPct": 15.65,
+              "sharpe": 0.502,
+              "calmar": 0.175,
+              "excessCagrPct": 0.73
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 532709.95,
+              "totalReturnPct": 432.71,
+              "cagrPct": 15.78,
+              "maxDrawdownPct": 23.38,
+              "annualizedVolatilityPct": 17.33,
+              "sharpe": 0.825,
+              "calmar": 0.675,
+              "excessCagrPct": 1.82
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.08,
+            "maxDrawdownDifferencePct": -3.24,
+            "trackingErrorPct": 5.14,
+            "informationRatio": 0.226,
+            "activeReturnTStat": 1.3,
+            "rollingFiveYearBeatRatePct": 60.12,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -25.46,
+            "bestRollingFiveYearExcessPct": 39.81
+          },
+          "averageWeightsPct": {
+            "profitability": 33.33,
+            "value": 33.33,
+            "momentum": 33.33
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "balanced_four_factor",
+          "label": "4팩터 동일비중",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 4429711.63,
+            "totalReturnPct": 4329.71,
+            "cagrPct": 12.04,
+            "maxDrawdownPct": 48.94,
+            "annualizedVolatilityPct": 15.44,
+            "sharpe": 0.66,
+            "calmar": 0.246
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 392935.11,
+              "totalReturnPct": 292.94,
+              "cagrPct": 12.17,
+              "maxDrawdownPct": 39.46,
+              "annualizedVolatilityPct": 14.42,
+              "sharpe": 0.614,
+              "calmar": 0.308,
+              "excessCagrPct": 1.4
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 230954.29,
+              "totalReturnPct": 130.95,
+              "cagrPct": 8.73,
+              "maxDrawdownPct": 48.94,
+              "annualizedVolatilityPct": 15.43,
+              "sharpe": 0.53,
+              "calmar": 0.178,
+              "excessCagrPct": 1.12
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 488122.24,
+              "totalReturnPct": 388.12,
+              "cagrPct": 14.9,
+              "maxDrawdownPct": 21.73,
+              "annualizedVolatilityPct": 16.4,
+              "sharpe": 0.815,
+              "calmar": 0.685,
+              "excessCagrPct": 0.94
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.16,
+            "maxDrawdownDifferencePct": -1.84,
+            "trackingErrorPct": 4.34,
+            "informationRatio": 0.264,
+            "activeReturnTStat": 1.524,
+            "rollingFiveYearBeatRatePct": 67.16,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -14.24,
+            "bestRollingFiveYearExcessPct": 30.94
+          },
+          "averageWeightsPct": {
+            "profitability": 25,
+            "value": 25,
+            "momentum": 25,
+            "investment": 25
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "dynamic_factor_top2",
+          "label": "최근 12개월 상위 2팩터",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 6634157.5,
+            "totalReturnPct": 6534.16,
+            "cagrPct": 13.41,
+            "maxDrawdownPct": 49.85,
+            "annualizedVolatilityPct": 15.77,
+            "sharpe": 0.727,
+            "calmar": 0.269
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 435460.78,
+              "totalReturnPct": 335.46,
+              "cagrPct": 13.14,
+              "maxDrawdownPct": 32.66,
+              "annualizedVolatilityPct": 14.94,
+              "sharpe": 0.656,
+              "calmar": 0.402,
+              "excessCagrPct": 2.37
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 237182.65,
+              "totalReturnPct": 137.18,
+              "cagrPct": 9.02,
+              "maxDrawdownPct": 49.85,
+              "annualizedVolatilityPct": 16.11,
+              "sharpe": 0.531,
+              "calmar": 0.181,
+              "excessCagrPct": 1.41
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 642323.51,
+              "totalReturnPct": 542.32,
+              "cagrPct": 17.69,
+              "maxDrawdownPct": 17.9,
+              "annualizedVolatilityPct": 16.23,
+              "sharpe": 0.971,
+              "calmar": 0.988,
+              "excessCagrPct": 3.73
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 2.53,
+            "maxDrawdownDifferencePct": -0.93,
+            "trackingErrorPct": 6.71,
+            "informationRatio": 0.361,
+            "activeReturnTStat": 2.079,
+            "rollingFiveYearBeatRatePct": 82.11,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -12.82,
+            "bestRollingFiveYearExcessPct": 76.02
+          },
+          "averageWeightsPct": {
+            "momentum": 28.38,
+            "investment": 24.75,
+            "value": 24.63,
+            "profitability": 22.25
+          },
+          "annualizedSleeveTurnoverPct": 147,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        }
+      ]
+    },
+    "stress": {
+      "annualImplementationDragPct": 1,
+      "benchmark": {
+        "id": "spy_total_return",
+        "label": "SPY 수정주가 매수보유",
+        "overall": {
+          "from": "199302",
+          "to": "202605",
+          "months": 400,
+          "endingEquity": 3129132.87,
+          "totalReturnPct": 3029.13,
+          "cagrPct": 10.88,
+          "maxDrawdownPct": 50.78,
+          "annualizedVolatilityPct": 14.77,
+          "sharpe": 0.612,
+          "calmar": 0.214
+        },
+        "segments": {
+          "development": {
+            "from": "199302",
+            "to": "200412",
+            "months": 143,
+            "endingEquity": 338233.85,
+            "totalReturnPct": 238.23,
+            "cagrPct": 10.77,
+            "maxDrawdownPct": 44.73,
+            "annualizedVolatilityPct": 14.6,
+            "sharpe": 0.521,
+            "calmar": 0.241
+          },
+          "validation": {
+            "from": "200501",
+            "to": "201412",
+            "months": 120,
+            "endingEquity": 208166.11,
+            "totalReturnPct": 108.17,
+            "cagrPct": 7.61,
+            "maxDrawdownPct": 50.78,
+            "annualizedVolatilityPct": 14.6,
+            "sharpe": 0.48,
+            "calmar": 0.15
+          },
+          "holdout": {
+            "from": "201501",
+            "to": "202605",
+            "months": 137,
+            "endingEquity": 444423.39,
+            "totalReturnPct": 344.42,
+            "cagrPct": 13.96,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 15.05,
+            "sharpe": 0.819,
+            "calmar": 0.583
+          }
+        }
+      },
+      "candidates": [
+        {
+          "id": "big_momentum",
+          "label": "대형 고모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3692482.58,
+            "totalReturnPct": 3592.48,
+            "cagrPct": 11.43,
+            "maxDrawdownPct": 50.86,
+            "annualizedVolatilityPct": 17.23,
+            "sharpe": 0.576,
+            "calmar": 0.225
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 424977.46,
+              "totalReturnPct": 324.98,
+              "cagrPct": 12.91,
+              "maxDrawdownPct": 43.54,
+              "annualizedVolatilityPct": 17.61,
+              "sharpe": 0.569,
+              "calmar": 0.296,
+              "excessCagrPct": 2.14
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 199666.8,
+              "totalReturnPct": 99.67,
+              "cagrPct": 7.16,
+              "maxDrawdownPct": 50.86,
+              "annualizedVolatilityPct": 16.44,
+              "sharpe": 0.419,
+              "calmar": 0.141,
+              "excessCagrPct": -0.45
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 435157.72,
+              "totalReturnPct": 335.16,
+              "cagrPct": 13.75,
+              "maxDrawdownPct": 26.43,
+              "annualizedVolatilityPct": 17.44,
+              "sharpe": 0.717,
+              "calmar": 0.52,
+              "excessCagrPct": -0.21
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.55,
+            "maxDrawdownDifferencePct": 0.08,
+            "trackingErrorPct": 9.6,
+            "informationRatio": 0.092,
+            "activeReturnTStat": 0.533,
+            "rollingFiveYearBeatRatePct": 53.67,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -46.76,
+            "bestRollingFiveYearExcessPct": 109.49
+          },
+          "averageWeightsPct": {
+            "momentum": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "big_profitability",
+          "label": "대형 고수익성",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 2994482.2,
+            "totalReturnPct": 2894.48,
+            "cagrPct": 10.74,
+            "maxDrawdownPct": 42.01,
+            "annualizedVolatilityPct": 14.31,
+            "sharpe": 0.618,
+            "calmar": 0.256
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 294974.92,
+              "totalReturnPct": 194.97,
+              "cagrPct": 9.5,
+              "maxDrawdownPct": 41.22,
+              "annualizedVolatilityPct": 14.16,
+              "sharpe": 0.451,
+              "calmar": 0.231,
+              "excessCagrPct": -1.27
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 225153.54,
+              "totalReturnPct": 125.15,
+              "cagrPct": 8.45,
+              "maxDrawdownPct": 42.01,
+              "annualizedVolatilityPct": 13.25,
+              "sharpe": 0.575,
+              "calmar": 0.201,
+              "excessCagrPct": 0.84
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 450876.78,
+              "totalReturnPct": 350.88,
+              "cagrPct": 14.1,
+              "maxDrawdownPct": 24.47,
+              "annualizedVolatilityPct": 15.29,
+              "sharpe": 0.816,
+              "calmar": 0.576,
+              "excessCagrPct": 0.14
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": -0.14,
+            "maxDrawdownDifferencePct": -8.77,
+            "trackingErrorPct": 4.53,
+            "informationRatio": -0.045,
+            "activeReturnTStat": -0.26,
+            "rollingFiveYearBeatRatePct": 53.67,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -32.85,
+            "bestRollingFiveYearExcessPct": 42.02
+          },
+          "averageWeightsPct": {
+            "profitability": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "big_value",
+          "label": "대형 가치",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 2992110.1,
+            "totalReturnPct": 2892.11,
+            "cagrPct": 10.73,
+            "maxDrawdownPct": 62.94,
+            "annualizedVolatilityPct": 22.29,
+            "sharpe": 0.463,
+            "calmar": 0.171
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 275689.68,
+              "totalReturnPct": 175.69,
+              "cagrPct": 8.88,
+              "maxDrawdownPct": 62.94,
+              "annualizedVolatilityPct": 20.07,
+              "sharpe": 0.342,
+              "calmar": 0.141,
+              "excessCagrPct": -1.89
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 193571.33,
+              "totalReturnPct": 93.57,
+              "cagrPct": 6.83,
+              "maxDrawdownPct": 53.29,
+              "annualizedVolatilityPct": 21.55,
+              "sharpe": 0.351,
+              "calmar": 0.128,
+              "excessCagrPct": -0.78
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 560681.24,
+              "totalReturnPct": 460.68,
+              "cagrPct": 16.3,
+              "maxDrawdownPct": 39.68,
+              "annualizedVolatilityPct": 24.9,
+              "sharpe": 0.656,
+              "calmar": 0.411,
+              "excessCagrPct": 2.34
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": -0.15,
+            "maxDrawdownDifferencePct": 12.16,
+            "trackingErrorPct": 14,
+            "informationRatio": 0.091,
+            "activeReturnTStat": 0.522,
+            "rollingFiveYearBeatRatePct": 28.74,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -83.74,
+            "bestRollingFiveYearExcessPct": 137.4
+          },
+          "averageWeightsPct": {
+            "value": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "big_conservative_investment",
+          "label": "대형 보수적 투자",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3649494.26,
+            "totalReturnPct": 3549.49,
+            "cagrPct": 11.4,
+            "maxDrawdownPct": 53.42,
+            "annualizedVolatilityPct": 15.69,
+            "sharpe": 0.614,
+            "calmar": 0.213
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 448027.02,
+              "totalReturnPct": 348.03,
+              "cagrPct": 13.41,
+              "maxDrawdownPct": 30.49,
+              "annualizedVolatilityPct": 15.08,
+              "sharpe": 0.667,
+              "calmar": 0.44,
+              "excessCagrPct": 2.64
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 240560.4,
+              "totalReturnPct": 140.56,
+              "cagrPct": 9.17,
+              "maxDrawdownPct": 53.42,
+              "annualizedVolatilityPct": 15.84,
+              "sharpe": 0.547,
+              "calmar": 0.172,
+              "excessCagrPct": 1.56
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 338613.56,
+              "totalReturnPct": 238.61,
+              "cagrPct": 11.27,
+              "maxDrawdownPct": 21.05,
+              "annualizedVolatilityPct": 16.17,
+              "sharpe": 0.622,
+              "calmar": 0.536,
+              "excessCagrPct": -2.69
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.52,
+            "maxDrawdownDifferencePct": 2.64,
+            "trackingErrorPct": 7.68,
+            "informationRatio": 0.078,
+            "activeReturnTStat": 0.45,
+            "rollingFiveYearBeatRatePct": 59.24,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -52.33,
+            "bestRollingFiveYearExcessPct": 61.74
+          },
+          "averageWeightsPct": {
+            "investment": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "quality_momentum",
+          "label": "수익성 + 모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3457237.95,
+            "totalReturnPct": 3357.24,
+            "cagrPct": 11.21,
+            "maxDrawdownPct": 46.54,
+            "annualizedVolatilityPct": 15.08,
+            "sharpe": 0.623,
+            "calmar": 0.241
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 361396.44,
+              "totalReturnPct": 261.4,
+              "cagrPct": 11.38,
+              "maxDrawdownPct": 41.79,
+              "annualizedVolatilityPct": 14.9,
+              "sharpe": 0.55,
+              "calmar": 0.272,
+              "excessCagrPct": 0.61
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 213627.03,
+              "totalReturnPct": 113.63,
+              "cagrPct": 7.89,
+              "maxDrawdownPct": 46.54,
+              "annualizedVolatilityPct": 14.42,
+              "sharpe": 0.503,
+              "calmar": 0.169,
+              "excessCagrPct": 0.28
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 447805.27,
+              "totalReturnPct": 347.81,
+              "cagrPct": 14.03,
+              "maxDrawdownPct": 23.78,
+              "annualizedVolatilityPct": 15.76,
+              "sharpe": 0.793,
+              "calmar": 0.59,
+              "excessCagrPct": 0.07
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.33,
+            "maxDrawdownDifferencePct": -4.24,
+            "trackingErrorPct": 5.73,
+            "informationRatio": 0.06,
+            "activeReturnTStat": 0.344,
+            "rollingFiveYearBeatRatePct": 72.43,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -32.22,
+            "bestRollingFiveYearExcessPct": 53.26
+          },
+          "averageWeightsPct": {
+            "profitability": 50,
+            "momentum": 50
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "quality_value_momentum",
+          "label": "수익성 + 가치 + 모멘텀",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3650907.61,
+            "totalReturnPct": 3550.91,
+            "cagrPct": 11.4,
+            "maxDrawdownPct": 47.89,
+            "annualizedVolatilityPct": 16.01,
+            "sharpe": 0.606,
+            "calmar": 0.238
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 342670.77,
+              "totalReturnPct": 242.67,
+              "cagrPct": 10.89,
+              "maxDrawdownPct": 44.38,
+              "annualizedVolatilityPct": 14.92,
+              "sharpe": 0.52,
+              "calmar": 0.245,
+              "excessCagrPct": 0.12
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 211841.65,
+              "totalReturnPct": 111.84,
+              "cagrPct": 7.8,
+              "maxDrawdownPct": 47.89,
+              "annualizedVolatilityPct": 15.64,
+              "sharpe": 0.47,
+              "calmar": 0.163,
+              "excessCagrPct": 0.19
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 502935.67,
+              "totalReturnPct": 402.94,
+              "cagrPct": 15.2,
+              "maxDrawdownPct": 23.44,
+              "annualizedVolatilityPct": 17.32,
+              "sharpe": 0.796,
+              "calmar": 0.648,
+              "excessCagrPct": 1.24
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.52,
+            "maxDrawdownDifferencePct": -2.89,
+            "trackingErrorPct": 5.14,
+            "informationRatio": 0.127,
+            "activeReturnTStat": 0.73,
+            "rollingFiveYearBeatRatePct": 47.8,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -29.85,
+            "bestRollingFiveYearExcessPct": 34.02
+          },
+          "averageWeightsPct": {
+            "profitability": 33.33,
+            "value": 33.33,
+            "momentum": 33.33
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "balanced_four_factor",
+          "label": "4팩터 동일비중",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 3744949.08,
+            "totalReturnPct": 3644.95,
+            "cagrPct": 11.48,
+            "maxDrawdownPct": 49.28,
+            "annualizedVolatilityPct": 15.43,
+            "sharpe": 0.628,
+            "calmar": 0.233
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 370039.87,
+              "totalReturnPct": 270.04,
+              "cagrPct": 11.61,
+              "maxDrawdownPct": 40.09,
+              "annualizedVolatilityPct": 14.41,
+              "sharpe": 0.579,
+              "calmar": 0.289,
+              "excessCagrPct": 0.84
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 219607.5,
+              "totalReturnPct": 119.61,
+              "cagrPct": 8.18,
+              "maxDrawdownPct": 49.28,
+              "annualizedVolatilityPct": 15.42,
+              "sharpe": 0.498,
+              "calmar": 0.166,
+              "excessCagrPct": 0.57
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 460840.06,
+              "totalReturnPct": 360.84,
+              "cagrPct": 14.32,
+              "maxDrawdownPct": 21.83,
+              "annualizedVolatilityPct": 16.4,
+              "sharpe": 0.784,
+              "calmar": 0.656,
+              "excessCagrPct": 0.36
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.6,
+            "maxDrawdownDifferencePct": -1.5,
+            "trackingErrorPct": 4.34,
+            "informationRatio": 0.147,
+            "activeReturnTStat": 0.848,
+            "rollingFiveYearBeatRatePct": 52.79,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -18.42,
+            "bestRollingFiveYearExcessPct": 25.37
+          },
+          "averageWeightsPct": {
+            "profitability": 25,
+            "value": 25,
+            "momentum": 25,
+            "investment": 25
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        },
+        {
+          "id": "dynamic_factor_top2",
+          "label": "최근 12개월 상위 2팩터",
+          "overall": {
+            "from": "199302",
+            "to": "202605",
+            "months": 400,
+            "endingEquity": 5340224.45,
+            "totalReturnPct": 5240.22,
+            "cagrPct": 12.67,
+            "maxDrawdownPct": 50.23,
+            "annualizedVolatilityPct": 15.76,
+            "sharpe": 0.686,
+            "calmar": 0.252
+          },
+          "segments": {
+            "development": {
+              "from": "199302",
+              "to": "200412",
+              "months": 143,
+              "endingEquity": 400555.62,
+              "totalReturnPct": 300.56,
+              "cagrPct": 12.35,
+              "maxDrawdownPct": 33.54,
+              "annualizedVolatilityPct": 14.92,
+              "sharpe": 0.609,
+              "calmar": 0.368,
+              "excessCagrPct": 1.58
+            },
+            "validation": {
+              "from": "200501",
+              "to": "201412",
+              "months": 120,
+              "endingEquity": 222726.2,
+              "totalReturnPct": 122.73,
+              "cagrPct": 8.34,
+              "maxDrawdownPct": 50.23,
+              "annualizedVolatilityPct": 16.09,
+              "sharpe": 0.492,
+              "calmar": 0.166,
+              "excessCagrPct": 0.73
+            },
+            "holdout": {
+              "from": "201501",
+              "to": "202605",
+              "months": 137,
+              "endingEquity": 598584.39,
+              "totalReturnPct": 498.58,
+              "cagrPct": 16.97,
+              "maxDrawdownPct": 18.34,
+              "annualizedVolatilityPct": 16.23,
+              "sharpe": 0.933,
+              "calmar": 0.925,
+              "excessCagrPct": 3.01
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.79,
+            "maxDrawdownDifferencePct": -0.55,
+            "trackingErrorPct": 6.71,
+            "informationRatio": 0.263,
+            "activeReturnTStat": 1.514,
+            "rollingFiveYearBeatRatePct": 63.64,
+            "rollingFiveYearWindows": 341,
+            "worstRollingFiveYearExcessPct": -23.24,
+            "bestRollingFiveYearExcessPct": 67.9
+          },
+          "averageWeightsPct": {
+            "momentum": 28.38,
+            "investment": 24.75,
+            "value": 24.63,
+            "profitability": 22.25
+          },
+          "annualizedSleeveTurnoverPct": 147,
+          "annualImplementationDragPct": 1,
+          "sleeveTurnoverCostPerOneWayPct": 0.2
+        }
+      ]
+    },
+    "longHistory": {
+      "annualImplementationDragPct": 0.5,
+      "benchmark": {
+        "id": "crsp_us_market",
+        "label": "미국 전체시장(Mkt-RF + RF)",
+        "overall": {
+          "from": "196307",
+          "to": "199212",
+          "months": 354,
+          "endingEquity": 2045318.61,
+          "totalReturnPct": 1945.32,
+          "cagrPct": 10.77,
+          "maxDrawdownPct": 46.51,
+          "annualizedVolatilityPct": 15.6,
+          "sharpe": 0.317,
+          "calmar": 0.232
+        },
+        "segments": {
+          "development": {
+            "from": null,
+            "to": null,
+            "months": 0,
+            "endingEquity": null,
+            "totalReturnPct": null,
+            "cagrPct": null,
+            "maxDrawdownPct": null,
+            "annualizedVolatilityPct": null,
+            "sharpe": null,
+            "calmar": null
+          },
+          "validation": {
+            "from": null,
+            "to": null,
+            "months": 0,
+            "endingEquity": null,
+            "totalReturnPct": null,
+            "cagrPct": null,
+            "maxDrawdownPct": null,
+            "annualizedVolatilityPct": null,
+            "sharpe": null,
+            "calmar": null
+          },
+          "holdout": {
+            "from": null,
+            "to": null,
+            "months": 0,
+            "endingEquity": null,
+            "totalReturnPct": null,
+            "cagrPct": null,
+            "maxDrawdownPct": null,
+            "annualizedVolatilityPct": null,
+            "sharpe": null,
+            "calmar": null
+          }
+        }
+      },
+      "candidates": [
+        {
+          "id": "big_momentum",
+          "label": "대형 고모멘텀",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 5009295.18,
+            "totalReturnPct": 4909.3,
+            "cagrPct": 14.19,
+            "maxDrawdownPct": 40.92,
+            "annualizedVolatilityPct": 18.79,
+            "sharpe": 0.455,
+            "calmar": 0.347
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 3.42,
+            "maxDrawdownDifferencePct": -5.59,
+            "trackingErrorPct": 8.77,
+            "informationRatio": 0.413,
+            "activeReturnTStat": 2.238,
+            "rollingFiveYearBeatRatePct": 83.73,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -42.35,
+            "bestRollingFiveYearExcessPct": 129.5
+          },
+          "averageWeightsPct": {
+            "momentum": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_profitability",
+          "label": "대형 고수익성",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 2177148.33,
+            "totalReturnPct": 2077.15,
+            "cagrPct": 11.01,
+            "maxDrawdownPct": 48.99,
+            "annualizedVolatilityPct": 15.99,
+            "sharpe": 0.326,
+            "calmar": 0.225
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 0.24,
+            "maxDrawdownDifferencePct": 2.48,
+            "trackingErrorPct": 4.99,
+            "informationRatio": 0.055,
+            "activeReturnTStat": 0.296,
+            "rollingFiveYearBeatRatePct": 56.61,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -51.58,
+            "bestRollingFiveYearExcessPct": 62.4
+          },
+          "averageWeightsPct": {
+            "profitability": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_value",
+          "label": "대형 가치",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3054186.23,
+            "totalReturnPct": 2954.19,
+            "cagrPct": 12.29,
+            "maxDrawdownPct": 34.04,
+            "annualizedVolatilityPct": 16.56,
+            "sharpe": 0.39,
+            "calmar": 0.361
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.52,
+            "maxDrawdownDifferencePct": -12.47,
+            "trackingErrorPct": 9.7,
+            "informationRatio": 0.156,
+            "activeReturnTStat": 0.845,
+            "rollingFiveYearBeatRatePct": 67.8,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -38.89,
+            "bestRollingFiveYearExcessPct": 97.05
+          },
+          "averageWeightsPct": {
+            "value": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "big_conservative_investment",
+          "label": "대형 보수적 투자",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3244816.24,
+            "totalReturnPct": 3144.82,
+            "cagrPct": 12.52,
+            "maxDrawdownPct": 39.75,
+            "annualizedVolatilityPct": 16.59,
+            "sharpe": 0.402,
+            "calmar": 0.315
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.75,
+            "maxDrawdownDifferencePct": -6.76,
+            "trackingErrorPct": 7.52,
+            "informationRatio": 0.228,
+            "activeReturnTStat": 1.237,
+            "rollingFiveYearBeatRatePct": 70.17,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -28.25,
+            "bestRollingFiveYearExcessPct": 105.8
+          },
+          "averageWeightsPct": {
+            "investment": 100
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "quality_momentum",
+          "label": "수익성 + 모멘텀",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3403205.55,
+            "totalReturnPct": 3303.21,
+            "cagrPct": 12.7,
+            "maxDrawdownPct": 44.97,
+            "annualizedVolatilityPct": 16.85,
+            "sharpe": 0.408,
+            "calmar": 0.282
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.93,
+            "maxDrawdownDifferencePct": -1.54,
+            "trackingErrorPct": 5.52,
+            "informationRatio": 0.352,
+            "activeReturnTStat": 1.911,
+            "rollingFiveYearBeatRatePct": 76.27,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -30.11,
+            "bestRollingFiveYearExcessPct": 54.79
+          },
+          "averageWeightsPct": {
+            "profitability": 50,
+            "momentum": 50
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "quality_value_momentum",
+          "label": "수익성 + 가치 + 모멘텀",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3435612.92,
+            "totalReturnPct": 3335.61,
+            "cagrPct": 12.74,
+            "maxDrawdownPct": 40.1,
+            "annualizedVolatilityPct": 15.77,
+            "sharpe": 0.427,
+            "calmar": 0.318
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.97,
+            "maxDrawdownDifferencePct": -6.41,
+            "trackingErrorPct": 4.41,
+            "informationRatio": 0.408,
+            "activeReturnTStat": 2.212,
+            "rollingFiveYearBeatRatePct": 91.19,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -12.07,
+            "bestRollingFiveYearExcessPct": 36.47
+          },
+          "averageWeightsPct": {
+            "profitability": 33.33,
+            "value": 33.33,
+            "momentum": 33.33
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "balanced_four_factor",
+          "label": "4팩터 동일비중",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3454938.09,
+            "totalReturnPct": 3354.94,
+            "cagrPct": 12.76,
+            "maxDrawdownPct": 39.6,
+            "annualizedVolatilityPct": 15.52,
+            "sharpe": 0.433,
+            "calmar": 0.322
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 1.99,
+            "maxDrawdownDifferencePct": -6.91,
+            "trackingErrorPct": 3.81,
+            "informationRatio": 0.467,
+            "activeReturnTStat": 2.535,
+            "rollingFiveYearBeatRatePct": 96.61,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -7.95,
+            "bestRollingFiveYearExcessPct": 49.62
+          },
+          "averageWeightsPct": {
+            "profitability": 25,
+            "value": 25,
+            "momentum": 25,
+            "investment": 25
+          },
+          "annualizedSleeveTurnoverPct": 0,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        },
+        {
+          "id": "dynamic_factor_top2",
+          "label": "최근 12개월 상위 2팩터",
+          "overall": {
+            "from": "196307",
+            "to": "199212",
+            "months": 354,
+            "endingEquity": 3688533.15,
+            "totalReturnPct": 3588.53,
+            "cagrPct": 13.01,
+            "maxDrawdownPct": 33.58,
+            "annualizedVolatilityPct": 16.45,
+            "sharpe": 0.431,
+            "calmar": 0.387
+          },
+          "segments": {
+            "development": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "validation": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            },
+            "holdout": {
+              "from": null,
+              "to": null,
+              "months": 0,
+              "endingEquity": null,
+              "totalReturnPct": null,
+              "cagrPct": null,
+              "maxDrawdownPct": null,
+              "annualizedVolatilityPct": null,
+              "sharpe": null,
+              "calmar": null,
+              "excessCagrPct": 0
+            }
+          },
+          "relativeToBenchmark": {
+            "excessCagrPct": 2.24,
+            "maxDrawdownDifferencePct": -12.93,
+            "trackingErrorPct": 6.25,
+            "informationRatio": 0.345,
+            "activeReturnTStat": 1.869,
+            "rollingFiveYearBeatRatePct": 87.8,
+            "rollingFiveYearWindows": 295,
+            "worstRollingFiveYearExcessPct": -16.47,
+            "bestRollingFiveYearExcessPct": 71.97
+          },
+          "averageWeightsPct": {
+            "momentum": 29.24,
+            "investment": 25.14,
+            "value": 23.16,
+            "profitability": 22.46
+          },
+          "annualizedSleeveTurnoverPct": 142.37,
+          "annualImplementationDragPct": 0.5,
+          "sleeveTurnoverCostPerOneWayPct": 0.1
+        }
+      ]
+    }
+  },
+  "selection": {
+    "survivors": [
+      "big_momentum",
+      "quality_value_momentum",
+      "balanced_four_factor",
+      "dynamic_factor_top2"
+    ],
+    "rejected": [
+      "big_profitability",
+      "big_value",
+      "big_conservative_investment",
+      "quality_momentum"
+    ],
+    "rows": [
+      {
+        "id": "big_momentum",
+        "label": "대형 고모멘텀",
+        "passed": true,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 12,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 1.12,
+          "developmentExcessCagrPct": 2.71,
+          "validationExcessCagrPct": 0.09,
+          "holdoutExcessCagrPct": 0.36,
+          "stressExcessCagrPct": 0.55,
+          "longHistoryExcessCagrPct": 3.42,
+          "maxDrawdownPct": 50.53,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 63.93
+        }
+      },
+      {
+        "id": "big_profitability",
+        "label": "대형 고수익성",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": false,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": false,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 11.3,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 0.42,
+          "developmentExcessCagrPct": -0.71,
+          "validationExcessCagrPct": 1.39,
+          "holdoutExcessCagrPct": 0.72,
+          "stressExcessCagrPct": -0.14,
+          "longHistoryExcessCagrPct": 0.24,
+          "maxDrawdownPct": 41.61,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 64.81
+        }
+      },
+      {
+        "id": "big_value",
+        "label": "대형 가치",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": false,
+          "positiveValidation": false,
+          "positiveHoldout": true,
+          "stressExcess": false,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": false
+        },
+        "evidence": {
+          "cagrPct": 11.29,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 0.41,
+          "developmentExcessCagrPct": -1.34,
+          "validationExcessCagrPct": -0.24,
+          "holdoutExcessCagrPct": 2.93,
+          "stressExcessCagrPct": -0.15,
+          "longHistoryExcessCagrPct": 1.52,
+          "maxDrawdownPct": 62.63,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 32.26
+        }
+      },
+      {
+        "id": "big_conservative_investment",
+        "label": "대형 보수적 투자",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": false,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 11.96,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 1.08,
+          "developmentExcessCagrPct": 3.21,
+          "validationExcessCagrPct": 2.12,
+          "holdoutExcessCagrPct": -2.12,
+          "stressExcessCagrPct": 0.52,
+          "longHistoryExcessCagrPct": 1.75,
+          "maxDrawdownPct": 53.11,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 63.64
+        }
+      },
+      {
+        "id": "quality_momentum",
+        "label": "수익성 + 모멘텀",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 11.78,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 0.9,
+          "developmentExcessCagrPct": 1.18,
+          "validationExcessCagrPct": 0.82,
+          "holdoutExcessCagrPct": 0.65,
+          "stressExcessCagrPct": 0.33,
+          "longHistoryExcessCagrPct": 1.93,
+          "maxDrawdownPct": 46.18,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 82.99
+        }
+      },
+      {
+        "id": "quality_value_momentum",
+        "label": "수익성 + 가치 + 모멘텀",
+        "passed": true,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 11.96,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 1.08,
+          "developmentExcessCagrPct": 0.68,
+          "validationExcessCagrPct": 0.73,
+          "holdoutExcessCagrPct": 1.82,
+          "stressExcessCagrPct": 0.52,
+          "longHistoryExcessCagrPct": 1.97,
+          "maxDrawdownPct": 47.54,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 60.12
+        }
+      },
+      {
+        "id": "balanced_four_factor",
+        "label": "4팩터 동일비중",
+        "passed": true,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 12.04,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 1.16,
+          "developmentExcessCagrPct": 1.4,
+          "validationExcessCagrPct": 1.12,
+          "holdoutExcessCagrPct": 0.94,
+          "stressExcessCagrPct": 0.6,
+          "longHistoryExcessCagrPct": 1.99,
+          "maxDrawdownPct": 48.94,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 67.16
+        }
+      },
+      {
+        "id": "dynamic_factor_top2",
+        "label": "최근 12개월 상위 2팩터",
+        "passed": true,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": true,
+          "stressExcess": true,
+          "longHistoryExcess": true,
+          "rollingFiveYearConsistency": true,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 13.41,
+          "spyCagrPct": 10.88,
+          "excessCagrPct": 2.53,
+          "developmentExcessCagrPct": 2.37,
+          "validationExcessCagrPct": 1.41,
+          "holdoutExcessCagrPct": 3.73,
+          "stressExcessCagrPct": 1.79,
+          "longHistoryExcessCagrPct": 2.24,
+          "maxDrawdownPct": 49.85,
+          "spyMaxDrawdownPct": 50.78,
+          "rollingFiveYearBeatRatePct": 82.11
+        }
+      }
+    ]
+  }
+}
