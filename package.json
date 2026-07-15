@@ -5,6 +5,10 @@
   "type": "module",
   "description": "Research-first trading strategy project for explainable US large-cap signals.",
   "scripts": {
+    "research:etf-proxy": "node research/etf-factor-proxy-backtest.mjs --output research/results/etf-factor-proxy-2026-07-15.json",
+    "research:etf-proxy:verify": "node research/verify-etf-factor-proxy.mjs",
+    "research:stock-basket": "node research/stock-basket-builder.mjs --output research/results/stock-basket-snapshot-2026-07-15.json",
+    "research:stock-basket:verify": "node research/verify-stock-basket-builder.mjs",
     "research:institutional": "node research/institutional-factor-backtest.mjs --output research/results/institutional-factor-backtest-2026-07-15.json",
     "research:institutional:verify": "node research/verify-institutional-factor-backtest.mjs",
     "research:benchmark": "node research/benchmark-challenger-backtest.mjs --output research/results/benchmark-challenger-2026-07-15.json",

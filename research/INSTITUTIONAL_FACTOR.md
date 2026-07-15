@@ -99,6 +99,10 @@ npm run research:institutional:verify
 
 원자료 URL과 SHA-256, 모든 후보·구간·스트레스 결과는 [결과 JSON](results/institutional-factor-backtest-2026-07-15.json)에 저장했다.
 
+## 후속 구현 검증
+
+실제 거래 가능한 MTUM·QUAL·VLUE로 같은 가설을 옮긴 핵심 후보는 사전 기준을 통과하지 못했다. 현재 종목 바스켓 엔진과 함께 [ETF 프록시 및 종목 바스켓 보고서](ETF_PROXY_AND_STOCK_BASKET.md)에 결과를 분리해 기록했다. 따라서 이 문서의 학술 포트폴리오 성과는 실거래 승인 근거로 사용하지 않는다.
+
 ## 연구 근거
 
 - [Kenneth R. French Data Library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html)

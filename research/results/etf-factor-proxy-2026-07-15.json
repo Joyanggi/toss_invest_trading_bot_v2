@@ -1,0 +1,1031 @@
+{
+  "generatedAt": "2026-07-15T06:55:53.292Z",
+  "methodology": {
+    "objective": "실제 거래 가능한 미국 ETF로 기관식 팩터 가설의 구현 가능성을 검증",
+    "benchmark": "SPY 수정주가 매수보유",
+    "primaryMapping": {
+      "momentum": "MTUM",
+      "profitability": "QUAL",
+      "value": "VLUE"
+    },
+    "secondaryApproximation": {
+      "symbol": "COWZ",
+      "warning": "French의 보수적 투자 팩터가 아니라 잉여현금흐름·자본규율의 짧은 이력 근사치"
+    },
+    "signalTiming": "직전 12개 완결 월 수익만 사용해 현재 월 시작 목표 비중 결정",
+    "execution": "월말 신호 후 다음 달 첫 거래일부터 목표 비중을 보유한 것으로 계산",
+    "costs": {
+      "basePerOneWayTurnoverPct": 0.1,
+      "stressPerOneWayTurnoverPct": 0.25,
+      "fundExpenses": "ETF 수정주가에 반영",
+      "firstPurchase": "SPY와 후보 모두 최초 100% 진입 비용 반영"
+    },
+    "segments": [
+      {
+        "id": "development",
+        "start": "000000",
+        "end": "201812"
+      },
+      {
+        "id": "validation",
+        "start": "201901",
+        "end": "202212"
+      },
+      {
+        "id": "holdout",
+        "start": "202301",
+        "end": "999999"
+      }
+    ],
+    "omitted": [
+      "한국 세금",
+      "원/달러 환율",
+      "장중 스프레드 변화",
+      "시장충격",
+      "Toss 주문 제약"
+    ]
+  },
+  "selectionPolicy": {
+    "minimumOverallExcessCagrPct": 0.5,
+    "minimumSegmentExcessCagrPct": 0,
+    "minimumStressExcessCagrPct": 0,
+    "minimumRollingFiveYearBeatRatePct": 60,
+    "maximumDrawdownPenaltyPct": 5,
+    "segmentRule": "개발·검증·홀드아웃 SPY 대비 CAGR이 모두 0% 초과",
+    "note": "ETF·후보·비용·임계값은 결과 확인 전에 고정"
+  },
+  "dataDiagnostics": {
+    "SPY": {
+      "source": "Yahoo Finance SPY adjusted daily close aggregated to month-end",
+      "sha256": "e65ff9ad723b8e2d23c5cf4baa7961103fe0f9f3f609964689fccf5265aad651",
+      "firstMonth": "199301",
+      "lastMonth": "202606",
+      "months": 402
+    },
+    "MTUM": {
+      "source": "Yahoo Finance MTUM adjusted daily close aggregated to month-end",
+      "sha256": "14ca23937df19dfca44d66b4509e58521e3a6c9bb3e8f09bbc442a00eb7de04c",
+      "firstMonth": "201304",
+      "lastMonth": "202606",
+      "months": 159
+    },
+    "QUAL": {
+      "source": "Yahoo Finance QUAL adjusted daily close aggregated to month-end",
+      "sha256": "bc78014632e5bb6668b83ad87cb2bc238c6fbe0fbfda01d632ce6e9c771a6470",
+      "firstMonth": "201307",
+      "lastMonth": "202606",
+      "months": 156
+    },
+    "VLUE": {
+      "source": "Yahoo Finance VLUE adjusted daily close aggregated to month-end",
+      "sha256": "fcdc796856e4f5167a461de795097a5bd5489ea288317e1a8dc048f8e9ecdbce",
+      "firstMonth": "201304",
+      "lastMonth": "202606",
+      "months": 159
+    },
+    "COWZ": {
+      "source": "Yahoo Finance COWZ adjusted daily close aggregated to month-end",
+      "sha256": "51f7df2c90890b7ad6c093cda95de80d1ffeae103267ac72ae8f469dae1655f7",
+      "firstMonth": "201612",
+      "lastMonth": "202606",
+      "months": 115
+    }
+  },
+  "primary": {
+    "familyId": "primary_three_factor",
+    "role": "primary_selection",
+    "proxies": {
+      "momentum": {
+        "symbol": "MTUM",
+        "label": "미국 모멘텀"
+      },
+      "profitability": {
+        "symbol": "QUAL",
+        "label": "미국 품질"
+      },
+      "value": {
+        "symbol": "VLUE",
+        "label": "미국 가치"
+      }
+    },
+    "commonReturnMonths": 155,
+    "warmupMonths": 12,
+    "simulationFrom": "201408",
+    "simulationTo": "202606",
+    "simulationMonths": 143,
+    "benchmarkSanity": {
+      "initialClose": 157.88137817382812,
+      "finalClose": 746.77001953125
+    },
+    "candidates": [
+      {
+        "id": "three_factor_equal",
+        "label": "3팩터 ETF 동일비중",
+        "description": "MTUM·QUAL·VLUE를 매월 1/3씩 리밸런싱"
+      },
+      {
+        "id": "three_factor_top2",
+        "label": "3팩터 ETF 상위 2개",
+        "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유"
+      }
+    ],
+    "scenarios": {
+      "base": {
+        "costPerOneWayPct": 0.1,
+        "benchmark": {
+          "id": "spy_buy_hold",
+          "label": "SPY 매수보유",
+          "description": null,
+          "overall": {
+            "from": "201408",
+            "to": "202606",
+            "months": 143,
+            "endingEquity": 472521.37,
+            "totalReturnPct": 372.52,
+            "cagrPct": 13.92,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 14.8,
+            "transactionCosts": 100,
+            "annualOneWayTurnoverPct": 8.39
+          },
+          "segments": {
+            "development": {
+              "from": "201408",
+              "to": "201812",
+              "months": 53,
+              "endingEquity": 141466.83,
+              "totalReturnPct": 41.47,
+              "cagrPct": 8.17,
+              "maxDrawdownPct": 13.53,
+              "annualizedVolatilityPct": 11.09
+            },
+            "validation": {
+              "from": "201901",
+              "to": "202212",
+              "months": 48,
+              "endingEquity": 163558.58,
+              "totalReturnPct": 63.56,
+              "cagrPct": 13.09,
+              "maxDrawdownPct": 23.93,
+              "annualizedVolatilityPct": 19.21
+            },
+            "holdout": {
+              "from": "202301",
+              "to": "202606",
+              "months": 42,
+              "endingEquity": 204217.76,
+              "totalReturnPct": 104.22,
+              "cagrPct": 22.63,
+              "maxDrawdownPct": 8.33,
+              "annualizedVolatilityPct": 12.71
+            }
+          },
+          "averageWeightsPct": {
+            "SPY": 100
+          },
+          "costPerOneWayPct": 0.1
+        },
+        "candidates": [
+          {
+            "id": "three_factor_equal",
+            "label": "3팩터 ETF 동일비중",
+            "description": "MTUM·QUAL·VLUE를 매월 1/3씩 리밸런싱",
+            "overall": {
+              "from": "201408",
+              "to": "202606",
+              "months": 143,
+              "endingEquity": 504537.58,
+              "totalReturnPct": 404.54,
+              "cagrPct": 14.55,
+              "maxDrawdownPct": 25.95,
+              "annualizedVolatilityPct": 15.56,
+              "transactionCosts": 305.41,
+              "annualOneWayTurnoverPct": 15.88
+            },
+            "segments": {
+              "development": {
+                "from": "201408",
+                "to": "201812",
+                "months": 53,
+                "endingEquity": 145508.26,
+                "totalReturnPct": 45.51,
+                "cagrPct": 8.86,
+                "maxDrawdownPct": 15.6,
+                "annualizedVolatilityPct": 11.01,
+                "excessCagrPct": 0.69
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 151757,
+                "totalReturnPct": 51.76,
+                "cagrPct": 10.99,
+                "maxDrawdownPct": 25.95,
+                "annualizedVolatilityPct": 19.43,
+                "excessCagrPct": -2.1
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 228484.71,
+                "totalReturnPct": 128.48,
+                "cagrPct": 26.63,
+                "maxDrawdownPct": 7.46,
+                "annualizedVolatilityPct": 15.08,
+                "excessCagrPct": 4
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 33.33,
+              "QUAL": 33.33,
+              "VLUE": 33.33
+            },
+            "costPerOneWayPct": 0.1,
+            "relativeToSpy": {
+              "excessCagrPct": 0.63,
+              "maxDrawdownDifferencePct": 2.02,
+              "trackingErrorPct": 4,
+              "informationRatio": 0.167,
+              "activeReturnTStat": 0.574,
+              "rollingFiveYearBeatRatePct": 10.71,
+              "rollingFiveYearWindows": 84,
+              "worstRollingFiveYearExcessPct": -29.94,
+              "bestRollingFiveYearExcessPct": 15.37
+            }
+          },
+          {
+            "id": "three_factor_top2",
+            "label": "3팩터 ETF 상위 2개",
+            "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유",
+            "overall": {
+              "from": "201408",
+              "to": "202606",
+              "months": 143,
+              "endingEquity": 545978.87,
+              "totalReturnPct": 445.98,
+              "cagrPct": 15.31,
+              "maxDrawdownPct": 28.44,
+              "annualizedVolatilityPct": 16.08,
+              "transactionCosts": 3162.96,
+              "annualOneWayTurnoverPct": 130.66
+            },
+            "segments": {
+              "development": {
+                "from": "201408",
+                "to": "201812",
+                "months": 53,
+                "endingEquity": 150724.81,
+                "totalReturnPct": 50.72,
+                "cagrPct": 9.73,
+                "maxDrawdownPct": 15.03,
+                "annualizedVolatilityPct": 11.02,
+                "excessCagrPct": 1.56
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 149055.03,
+                "totalReturnPct": 49.06,
+                "cagrPct": 10.49,
+                "maxDrawdownPct": 28.44,
+                "annualizedVolatilityPct": 19.29,
+                "excessCagrPct": -2.6
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 243021.36,
+                "totalReturnPct": 143.02,
+                "cagrPct": 28.88,
+                "maxDrawdownPct": 9.05,
+                "annualizedVolatilityPct": 16.91,
+                "excessCagrPct": 6.25
+              }
+            },
+            "averageWeightsPct": {
+              "QUAL": 40.21,
+              "MTUM": 39.16,
+              "VLUE": 20.63
+            },
+            "costPerOneWayPct": 0.1,
+            "relativeToSpy": {
+              "excessCagrPct": 1.39,
+              "maxDrawdownDifferencePct": 4.51,
+              "trackingErrorPct": 5.49,
+              "informationRatio": 0.257,
+              "activeReturnTStat": 0.882,
+              "rollingFiveYearBeatRatePct": 29.76,
+              "rollingFiveYearWindows": 84,
+              "worstRollingFiveYearExcessPct": -46.61,
+              "bestRollingFiveYearExcessPct": 22.14
+            }
+          }
+        ]
+      },
+      "stress": {
+        "costPerOneWayPct": 0.25,
+        "benchmark": {
+          "id": "spy_buy_hold",
+          "label": "SPY 매수보유",
+          "description": null,
+          "overall": {
+            "from": "201408",
+            "to": "202606",
+            "months": 143,
+            "endingEquity": 471811.88,
+            "totalReturnPct": 371.81,
+            "cagrPct": 13.9,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 14.8,
+            "transactionCosts": 250,
+            "annualOneWayTurnoverPct": 8.39
+          },
+          "segments": {
+            "development": {
+              "from": "201408",
+              "to": "201812",
+              "months": 53,
+              "endingEquity": 141254.41,
+              "totalReturnPct": 41.25,
+              "cagrPct": 8.13,
+              "maxDrawdownPct": 13.53,
+              "annualizedVolatilityPct": 11.08
+            },
+            "validation": {
+              "from": "201901",
+              "to": "202212",
+              "months": 48,
+              "endingEquity": 163558.58,
+              "totalReturnPct": 63.56,
+              "cagrPct": 13.09,
+              "maxDrawdownPct": 23.93,
+              "annualizedVolatilityPct": 19.21
+            },
+            "holdout": {
+              "from": "202301",
+              "to": "202606",
+              "months": 42,
+              "endingEquity": 204217.76,
+              "totalReturnPct": 104.22,
+              "cagrPct": 22.63,
+              "maxDrawdownPct": 8.33,
+              "annualizedVolatilityPct": 12.71
+            }
+          },
+          "averageWeightsPct": {
+            "SPY": 100
+          },
+          "costPerOneWayPct": 0.25
+        },
+        "candidates": [
+          {
+            "id": "three_factor_equal",
+            "label": "3팩터 ETF 동일비중",
+            "description": "MTUM·QUAL·VLUE를 매월 1/3씩 리밸런싱",
+            "overall": {
+              "from": "201408",
+              "to": "202606",
+              "months": 143,
+              "endingEquity": 503106.4,
+              "totalReturnPct": 403.11,
+              "cagrPct": 14.52,
+              "maxDrawdownPct": 25.96,
+              "annualizedVolatilityPct": 15.56,
+              "transactionCosts": 762.33,
+              "annualOneWayTurnoverPct": 15.88
+            },
+            "segments": {
+              "development": {
+                "from": "201408",
+                "to": "201812",
+                "months": 53,
+                "endingEquity": 145245.87,
+                "totalReturnPct": 45.25,
+                "cagrPct": 8.82,
+                "maxDrawdownPct": 15.6,
+                "annualizedVolatilityPct": 11,
+                "excessCagrPct": 0.69
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 151670.15,
+                "totalReturnPct": 51.67,
+                "cagrPct": 10.97,
+                "maxDrawdownPct": 25.96,
+                "annualizedVolatilityPct": 19.43,
+                "excessCagrPct": -2.12
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 228378.88,
+                "totalReturnPct": 128.38,
+                "cagrPct": 26.61,
+                "maxDrawdownPct": 7.47,
+                "annualizedVolatilityPct": 15.08,
+                "excessCagrPct": 3.98
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 33.33,
+              "QUAL": 33.33,
+              "VLUE": 33.33
+            },
+            "costPerOneWayPct": 0.25,
+            "relativeToSpy": {
+              "excessCagrPct": 0.62,
+              "maxDrawdownDifferencePct": 2.03,
+              "trackingErrorPct": 4,
+              "informationRatio": 0.164,
+              "activeReturnTStat": 0.564,
+              "rollingFiveYearBeatRatePct": 10.71,
+              "rollingFiveYearWindows": 84,
+              "worstRollingFiveYearExcessPct": -30.06,
+              "bestRollingFiveYearExcessPct": 15.23
+            }
+          },
+          {
+            "id": "three_factor_top2",
+            "label": "3팩터 ETF 상위 2개",
+            "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유",
+            "overall": {
+              "from": "201408",
+              "to": "202606",
+              "months": 143,
+              "endingEquity": 533363.67,
+              "totalReturnPct": 433.36,
+              "cagrPct": 15.08,
+              "maxDrawdownPct": 28.55,
+              "annualizedVolatilityPct": 16.08,
+              "transactionCosts": 7799.71,
+              "annualOneWayTurnoverPct": 130.66
+            },
+            "segments": {
+              "development": {
+                "from": "201408",
+                "to": "201812",
+                "months": 53,
+                "endingEquity": 149229.97,
+                "totalReturnPct": 49.23,
+                "cagrPct": 9.49,
+                "maxDrawdownPct": 15.03,
+                "annualizedVolatilityPct": 10.99,
+                "excessCagrPct": 1.36
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 148441.93,
+                "totalReturnPct": 48.44,
+                "cagrPct": 10.38,
+                "maxDrawdownPct": 28.55,
+                "annualizedVolatilityPct": 19.3,
+                "excessCagrPct": -2.71
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 240774.66,
+                "totalReturnPct": 140.77,
+                "cagrPct": 28.54,
+                "maxDrawdownPct": 9.25,
+                "annualizedVolatilityPct": 16.93,
+                "excessCagrPct": 5.91
+              }
+            },
+            "averageWeightsPct": {
+              "QUAL": 40.21,
+              "MTUM": 39.16,
+              "VLUE": 20.63
+            },
+            "costPerOneWayPct": 0.25,
+            "relativeToSpy": {
+              "excessCagrPct": 1.18,
+              "maxDrawdownDifferencePct": 4.62,
+              "trackingErrorPct": 5.5,
+              "informationRatio": 0.222,
+              "activeReturnTStat": 0.765,
+              "rollingFiveYearBeatRatePct": 29.76,
+              "rollingFiveYearWindows": 84,
+              "worstRollingFiveYearExcessPct": -48.63,
+              "bestRollingFiveYearExcessPct": 19.86
+            }
+          }
+        ]
+      }
+    },
+    "selection": {
+      "survivors": [],
+      "rejected": [
+        "three_factor_equal",
+        "three_factor_top2"
+      ],
+      "rows": [
+        {
+          "id": "three_factor_equal",
+          "label": "3팩터 ETF 동일비중",
+          "passed": false,
+          "checks": {
+            "overallExcessCagr": true,
+            "positiveDevelopment": true,
+            "positiveValidation": false,
+            "positiveHoldout": true,
+            "stressExcess": true,
+            "rollingFiveYearConsistency": false,
+            "drawdownControl": true
+          },
+          "evidence": {
+            "cagrPct": 14.55,
+            "spyCagrPct": 13.92,
+            "excessCagrPct": 0.63,
+            "developmentExcessCagrPct": 0.69,
+            "validationExcessCagrPct": -2.1,
+            "holdoutExcessCagrPct": 4,
+            "stressExcessCagrPct": 0.62,
+            "maxDrawdownPct": 25.95,
+            "spyMaxDrawdownPct": 23.93,
+            "rollingFiveYearBeatRatePct": 10.71
+          }
+        },
+        {
+          "id": "three_factor_top2",
+          "label": "3팩터 ETF 상위 2개",
+          "passed": false,
+          "checks": {
+            "overallExcessCagr": true,
+            "positiveDevelopment": true,
+            "positiveValidation": false,
+            "positiveHoldout": true,
+            "stressExcess": true,
+            "rollingFiveYearConsistency": false,
+            "drawdownControl": true
+          },
+          "evidence": {
+            "cagrPct": 15.31,
+            "spyCagrPct": 13.92,
+            "excessCagrPct": 1.39,
+            "developmentExcessCagrPct": 1.56,
+            "validationExcessCagrPct": -2.6,
+            "holdoutExcessCagrPct": 6.25,
+            "stressExcessCagrPct": 1.18,
+            "maxDrawdownPct": 28.44,
+            "spyMaxDrawdownPct": 23.93,
+            "rollingFiveYearBeatRatePct": 29.76
+          }
+        }
+      ]
+    }
+  },
+  "secondary": {
+    "familyId": "secondary_four_proxy",
+    "role": "short_history_sensitivity_only",
+    "proxies": {
+      "momentum": {
+        "symbol": "MTUM",
+        "label": "미국 모멘텀"
+      },
+      "profitability": {
+        "symbol": "QUAL",
+        "label": "미국 품질"
+      },
+      "value": {
+        "symbol": "VLUE",
+        "label": "미국 가치"
+      },
+      "capitalDisciplineApproximation": {
+        "symbol": "COWZ",
+        "label": "잉여현금흐름 근사",
+        "approximation": true
+      }
+    },
+    "commonReturnMonths": 114,
+    "warmupMonths": 12,
+    "simulationFrom": "201801",
+    "simulationTo": "202606",
+    "simulationMonths": 102,
+    "benchmarkSanity": {
+      "initialClose": 234.2775115966797,
+      "finalClose": 746.77001953125
+    },
+    "candidates": [
+      {
+        "id": "four_proxy_equal",
+        "label": "4프록시 ETF 동일비중",
+        "description": "MTUM·QUAL·VLUE·COWZ를 매월 1/4씩 리밸런싱"
+      },
+      {
+        "id": "four_proxy_top2",
+        "label": "4프록시 ETF 상위 2개",
+        "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유"
+      }
+    ],
+    "scenarios": {
+      "base": {
+        "costPerOneWayPct": 0.1,
+        "benchmark": {
+          "id": "spy_buy_hold",
+          "label": "SPY 매수보유",
+          "description": null,
+          "overall": {
+            "from": "201801",
+            "to": "202606",
+            "months": 102,
+            "endingEquity": 318435.71,
+            "totalReturnPct": 218.44,
+            "cagrPct": 14.6,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 16.42,
+            "transactionCosts": 100,
+            "annualOneWayTurnoverPct": 11.76
+          },
+          "segments": {
+            "development": {
+              "from": "201801",
+              "to": "201812",
+              "months": 12,
+              "endingEquity": 95335.56,
+              "totalReturnPct": -4.66,
+              "cagrPct": -4.66,
+              "maxDrawdownPct": 13.53,
+              "annualizedVolatilityPct": 14.48
+            },
+            "validation": {
+              "from": "201901",
+              "to": "202212",
+              "months": 48,
+              "endingEquity": 163558.58,
+              "totalReturnPct": 63.56,
+              "cagrPct": 13.09,
+              "maxDrawdownPct": 23.93,
+              "annualizedVolatilityPct": 19.21
+            },
+            "holdout": {
+              "from": "202301",
+              "to": "202606",
+              "months": 42,
+              "endingEquity": 204217.76,
+              "totalReturnPct": 104.22,
+              "cagrPct": 22.63,
+              "maxDrawdownPct": 8.33,
+              "annualizedVolatilityPct": 12.71
+            }
+          },
+          "averageWeightsPct": {
+            "SPY": 100
+          },
+          "costPerOneWayPct": 0.1
+        },
+        "candidates": [
+          {
+            "id": "four_proxy_equal",
+            "label": "4프록시 ETF 동일비중",
+            "description": "MTUM·QUAL·VLUE·COWZ를 매월 1/4씩 리밸런싱",
+            "overall": {
+              "from": "201801",
+              "to": "202606",
+              "months": 102,
+              "endingEquity": 307877.69,
+              "totalReturnPct": 207.88,
+              "cagrPct": 14.14,
+              "maxDrawdownPct": 22.87,
+              "annualizedVolatilityPct": 17.34,
+              "transactionCosts": 232.82,
+              "annualOneWayTurnoverPct": 21.09
+            },
+            "segments": {
+              "development": {
+                "from": "201801",
+                "to": "201812",
+                "months": 12,
+                "endingEquity": 92753.01,
+                "totalReturnPct": -7.25,
+                "cagrPct": -7.25,
+                "maxDrawdownPct": 15.75,
+                "annualizedVolatilityPct": 14.82,
+                "excessCagrPct": -2.59
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 162347.52,
+                "totalReturnPct": 62.35,
+                "cagrPct": 12.88,
+                "maxDrawdownPct": 22.87,
+                "annualizedVolatilityPct": 20.1,
+                "excessCagrPct": -0.21
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 204458.21,
+                "totalReturnPct": 104.46,
+                "cagrPct": 22.67,
+                "maxDrawdownPct": 8.53,
+                "annualizedVolatilityPct": 13.83,
+                "excessCagrPct": 0.04
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 25,
+              "QUAL": 25,
+              "VLUE": 25,
+              "COWZ": 25
+            },
+            "costPerOneWayPct": 0.1,
+            "relativeToSpy": {
+              "excessCagrPct": -0.46,
+              "maxDrawdownDifferencePct": -1.06,
+              "trackingErrorPct": 4.62,
+              "informationRatio": -0.053,
+              "activeReturnTStat": -0.154,
+              "rollingFiveYearBeatRatePct": 2.33,
+              "rollingFiveYearWindows": 43,
+              "worstRollingFiveYearExcessPct": -21.93,
+              "bestRollingFiveYearExcessPct": 5.18
+            }
+          },
+          {
+            "id": "four_proxy_top2",
+            "label": "4프록시 ETF 상위 2개",
+            "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유",
+            "overall": {
+              "from": "201801",
+              "to": "202606",
+              "months": 102,
+              "endingEquity": 424145.29,
+              "totalReturnPct": 324.15,
+              "cagrPct": 18.53,
+              "maxDrawdownPct": 21.3,
+              "annualizedVolatilityPct": 17.9,
+              "transactionCosts": 1603.8,
+              "annualOneWayTurnoverPct": 110.61
+            },
+            "segments": {
+              "development": {
+                "from": "201801",
+                "to": "201812",
+                "months": 12,
+                "endingEquity": 93864.21,
+                "totalReturnPct": -6.14,
+                "cagrPct": -6.14,
+                "maxDrawdownPct": 15.03,
+                "annualizedVolatilityPct": 14.72,
+                "excessCagrPct": -1.48
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 173829.3,
+                "totalReturnPct": 73.83,
+                "cagrPct": 14.82,
+                "maxDrawdownPct": 21.3,
+                "annualizedVolatilityPct": 18.92,
+                "excessCagrPct": 1.73
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 259951.08,
+                "totalReturnPct": 159.95,
+                "cagrPct": 31.38,
+                "maxDrawdownPct": 7.05,
+                "annualizedVolatilityPct": 16.86,
+                "excessCagrPct": 8.75
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 33.82,
+              "QUAL": 32.35,
+              "COWZ": 18.14,
+              "VLUE": 15.69
+            },
+            "costPerOneWayPct": 0.1,
+            "relativeToSpy": {
+              "excessCagrPct": 3.93,
+              "maxDrawdownDifferencePct": -2.63,
+              "trackingErrorPct": 7.1,
+              "informationRatio": 0.514,
+              "activeReturnTStat": 1.491,
+              "rollingFiveYearBeatRatePct": 74.42,
+              "rollingFiveYearWindows": 43,
+              "worstRollingFiveYearExcessPct": -5.69,
+              "bestRollingFiveYearExcessPct": 65.23
+            }
+          }
+        ]
+      },
+      "stress": {
+        "costPerOneWayPct": 0.25,
+        "benchmark": {
+          "id": "spy_buy_hold",
+          "label": "SPY 매수보유",
+          "description": null,
+          "overall": {
+            "from": "201801",
+            "to": "202606",
+            "months": 102,
+            "endingEquity": 317957.57,
+            "totalReturnPct": 217.96,
+            "cagrPct": 14.58,
+            "maxDrawdownPct": 23.93,
+            "annualizedVolatilityPct": 16.42,
+            "transactionCosts": 250,
+            "annualOneWayTurnoverPct": 11.76
+          },
+          "segments": {
+            "development": {
+              "from": "201801",
+              "to": "201812",
+              "months": 12,
+              "endingEquity": 95192.41,
+              "totalReturnPct": -4.81,
+              "cagrPct": -4.81,
+              "maxDrawdownPct": 13.53,
+              "annualizedVolatilityPct": 14.42
+            },
+            "validation": {
+              "from": "201901",
+              "to": "202212",
+              "months": 48,
+              "endingEquity": 163558.58,
+              "totalReturnPct": 63.56,
+              "cagrPct": 13.09,
+              "maxDrawdownPct": 23.93,
+              "annualizedVolatilityPct": 19.21
+            },
+            "holdout": {
+              "from": "202301",
+              "to": "202606",
+              "months": 42,
+              "endingEquity": 204217.76,
+              "totalReturnPct": 104.22,
+              "cagrPct": 22.63,
+              "maxDrawdownPct": 8.33,
+              "annualizedVolatilityPct": 12.71
+            }
+          },
+          "averageWeightsPct": {
+            "SPY": 100
+          },
+          "costPerOneWayPct": 0.25
+        },
+        "candidates": [
+          {
+            "id": "four_proxy_equal",
+            "label": "4프록시 ETF 동일비중",
+            "description": "MTUM·QUAL·VLUE·COWZ를 매월 1/4씩 리밸런싱",
+            "overall": {
+              "from": "201801",
+              "to": "202606",
+              "months": 102,
+              "endingEquity": 307050.04,
+              "totalReturnPct": 207.05,
+              "cagrPct": 14.11,
+              "maxDrawdownPct": 22.88,
+              "annualizedVolatilityPct": 17.34,
+              "transactionCosts": 581.33,
+              "annualOneWayTurnoverPct": 21.09
+            },
+            "segments": {
+              "development": {
+                "from": "201801",
+                "to": "201812",
+                "months": 12,
+                "endingEquity": 92607.69,
+                "totalReturnPct": -7.39,
+                "cagrPct": -7.39,
+                "maxDrawdownPct": 15.75,
+                "annualizedVolatilityPct": 14.76,
+                "excessCagrPct": -2.58
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 162249,
+                "totalReturnPct": 62.25,
+                "cagrPct": 12.86,
+                "maxDrawdownPct": 22.88,
+                "annualizedVolatilityPct": 20.1,
+                "excessCagrPct": -0.23
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 204352.57,
+                "totalReturnPct": 104.35,
+                "cagrPct": 22.65,
+                "maxDrawdownPct": 8.54,
+                "annualizedVolatilityPct": 13.83,
+                "excessCagrPct": 0.02
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 25,
+              "QUAL": 25,
+              "VLUE": 25,
+              "COWZ": 25
+            },
+            "costPerOneWayPct": 0.25,
+            "relativeToSpy": {
+              "excessCagrPct": -0.47,
+              "maxDrawdownDifferencePct": -1.05,
+              "trackingErrorPct": 4.62,
+              "informationRatio": -0.056,
+              "activeReturnTStat": -0.163,
+              "rollingFiveYearBeatRatePct": 2.33,
+              "rollingFiveYearWindows": 43,
+              "worstRollingFiveYearExcessPct": -22.04,
+              "bestRollingFiveYearExcessPct": 5.04
+            }
+          },
+          {
+            "id": "four_proxy_top2",
+            "label": "4프록시 ETF 상위 2개",
+            "description": "직전 12개월 수익 상위 두 ETF를 다음 달 50:50 보유",
+            "overall": {
+              "from": "201801",
+              "to": "202606",
+              "months": 102,
+              "endingEquity": 418200.38,
+              "totalReturnPct": 318.2,
+              "cagrPct": 18.33,
+              "maxDrawdownPct": 21.36,
+              "annualizedVolatilityPct": 17.89,
+              "transactionCosts": 3977.91,
+              "annualOneWayTurnoverPct": 110.61
+            },
+            "segments": {
+              "development": {
+                "from": "201801",
+                "to": "201812",
+                "months": 12,
+                "endingEquity": 93508.06,
+                "totalReturnPct": -6.49,
+                "cagrPct": -6.49,
+                "maxDrawdownPct": 15.03,
+                "annualizedVolatilityPct": 14.61,
+                "excessCagrPct": -1.68
+              },
+              "validation": {
+                "from": "201901",
+                "to": "202212",
+                "months": 48,
+                "endingEquity": 173003.85,
+                "totalReturnPct": 73,
+                "cagrPct": 14.69,
+                "maxDrawdownPct": 21.36,
+                "annualizedVolatilityPct": 18.92,
+                "excessCagrPct": 1.6
+              },
+              "holdout": {
+                "from": "202301",
+                "to": "202606",
+                "months": 42,
+                "endingEquity": 258511.34,
+                "totalReturnPct": 158.51,
+                "cagrPct": 31.18,
+                "maxDrawdownPct": 7.05,
+                "annualizedVolatilityPct": 16.85,
+                "excessCagrPct": 8.55
+              }
+            },
+            "averageWeightsPct": {
+              "MTUM": 33.82,
+              "QUAL": 32.35,
+              "COWZ": 18.14,
+              "VLUE": 15.69
+            },
+            "costPerOneWayPct": 0.25,
+            "relativeToSpy": {
+              "excessCagrPct": 3.75,
+              "maxDrawdownDifferencePct": -2.57,
+              "trackingErrorPct": 7.11,
+              "informationRatio": 0.492,
+              "activeReturnTStat": 1.427,
+              "rollingFiveYearBeatRatePct": 69.77,
+              "rollingFiveYearWindows": 43,
+              "worstRollingFiveYearExcessPct": -6.86,
+              "bestRollingFiveYearExcessPct": 63.06
+            }
+          }
+        ]
+      }
+    },
+    "selection": null
+  }
+}

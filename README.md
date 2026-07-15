@@ -10,24 +10,30 @@
 
 - SPY 100% 매수보유를 공식 벤치마크로 사용
 - 공식 포인트인타임 대형주 가치·수익성·투자·모멘텀 팩터 비교
+- 실제 거래 가능한 MTUM·QUAL·VLUE ETF 프록시 검증
+- SEC 기준일 공시로 만드는 30종목 연구 바스켓
 - 개발·검증·홀드아웃, SPY 이전 장기 이력, 비용 스트레스와 5년 구간 승률 검사
 - 월별 팩터 교체 회전율과 구현 드래그를 반영한 포트폴리오 백테스트
 - 벤치마크 초과수익이 재현되지 않으면 거래 전략을 채택하지 않음
 - 결과 파일의 구조와 핵심 수치를 확인하는 독립 검증 스크립트
 
-현재 목표의 상세 가정과 결과는 [기관식 멀티팩터 연구](research/INSTITUTIONAL_FACTOR.md)에 정리되어 있습니다. 앞선 ETF 타이밍 연구는 [S&P 500 도전자 1차 연구](research/BENCHMARK_CHALLENGER.md), 기존 보조지표 연구는 [초기 비교 기록](research/README.md)으로 보존합니다.
+최신 결과는 [ETF 프록시와 종목 바스켓 연구](research/ETF_PROXY_AND_STOCK_BASKET.md)에 정리되어 있습니다. 학술 포트폴리오 가설은 [기관식 멀티팩터 연구](research/INSTITUTIONAL_FACTOR.md), 앞선 ETF 타이밍 연구는 [S&P 500 도전자 1차 연구](research/BENCHMARK_CHALLENGER.md), 기존 보조지표 연구는 [초기 비교 기록](research/README.md)으로 보존합니다.
 
 ## 예비 결론
 
-2026-07-15 기관식 2차 라운드에서는 8개 후보 중 4개가 사전 기준을 통과했습니다. 가장 강한 `직전 12개월 상위 2팩터`는 1993-02~2026-05에 구현비용 차감 후 CAGR 13.41%, SPY 10.88%, 최대낙폭 49.85%, 5년 이동창 승률 82.11%였습니다. 비용 스트레스 후에도 SPY 대비 CAGR이 1.79%p 높았습니다.
+학술 포트폴리오에서는 동적 상위 2팩터가 강했지만 실제 `MTUM·QUAL·VLUE`로 옮긴 핵심 두 후보는 모두 탈락했습니다. ETF 상위 2개 전략은 2014-08~2026-06 CAGR 15.31%로 SPY 13.92%를 앞섰지만, 2019~2022 검증구간에서 연 2.60%p 뒤졌고 5년 구간 승률도 29.76%였습니다.
 
-다만 이는 직접 주문 가능한 종목 포트폴리오가 아니라 CRSP 기반 연구 포트폴리오 결과입니다. 현재 결론은 `실거래 승인`이 아니라 동적 상위 2팩터와 4팩터 동일비중만 외부시장·투자가능 상품 검증으로 넘긴다는 것입니다.
+SEC 공시와 현재 S&P 100으로 30종목 바스켓 엔진도 구축했지만, 역사적 포인트인타임 바스켓 백테스트가 없어 `researchOnly: true`, `liveTradingApproved: false` 상태입니다. V2에는 실제 주문 코드가 없습니다.
 
 ## 실행
 
 요구 환경: Node.js 22 이상
 
 ```bash
+npm run research:etf-proxy
+npm run research:etf-proxy:verify
+SEC_USER_AGENT="Your Name your-email@example.com" npm run research:stock-basket
+npm run research:stock-basket:verify
 npm run research:institutional
 npm run research:institutional:verify
 npm run research:benchmark
@@ -55,6 +61,11 @@ node research/v2-strategy-backtest.mjs \
 
 ```text
 research/
+  ETF_PROXY_AND_STOCK_BASKET.md     실제 ETF 검증과 현재 종목 바스켓
+  etf-factor-proxy-backtest.mjs    거래 가능한 팩터 ETF 백테스트
+  verify-etf-factor-proxy.mjs      ETF 프록시 결과 검증
+  stock-basket-builder.mjs         SEC 기준일 공시 종목 바스켓 엔진
+  verify-stock-basket-builder.mjs  공시 시점·점수·업종 한도 검증
   INSTITUTIONAL_FACTOR.md           현재 기관식 멀티팩터 연구와 결과
   institutional-factor-backtest.mjs 공식 포인트인타임 팩터 백테스트
   verify-institutional-factor-backtest.mjs 결과·시점 정렬 회귀 검증
