@@ -1,0 +1,1383 @@
+{
+  "generatedAt": "2026-07-15T05:38:53.177Z",
+  "methodology": {
+    "objective": "거래비용 차감 후 SPY 100% 매수보유보다 높은 장기 복리수익",
+    "universe": {
+      "sectors": [
+        "XLB",
+        "XLE",
+        "XLF",
+        "XLI",
+        "XLK",
+        "XLP",
+        "XLU",
+        "XLV",
+        "XLY"
+      ],
+      "styles": [
+        "SPY",
+        "QQQ",
+        "IWM",
+        "MDY",
+        "IWD",
+        "IWF"
+      ],
+      "defensive": [
+        "IEF",
+        "GLD",
+        "BIL"
+      ],
+      "leverageProxy": "SSO"
+    },
+    "biasNotes": {
+      "individualConstituentSurvivorship": "고정 ETF를 사용하므로 현재 개별 종목 구성원을 과거에 투영하는 편향은 없음",
+      "etfSelectionBias": "현재까지 생존했고 널리 알려진 ETF를 사후 선택한 편향은 남아 있음"
+    },
+    "priceSource": "Yahoo Finance adjusted daily OHLC",
+    "dividendsAndFundExpenses": "수정주가에 반영",
+    "execution": "월말 종가로 신호를 계산하고 다음 거래일 수정 시가에 리밸런싱",
+    "rebalance": "월 1회",
+    "initialCapital": 100000,
+    "startDate": "2008-07-01",
+    "endDate": "2026-07-13",
+    "segments": [
+      {
+        "id": "development",
+        "start": "2008-07-01",
+        "end": "2013-12-31"
+      },
+      {
+        "id": "validation",
+        "start": "2014-01-01",
+        "end": "2019-12-31"
+      },
+      {
+        "id": "holdout",
+        "start": "2020-01-01",
+        "end": "9999-12-31"
+      }
+    ],
+    "omitted": [
+      "세금",
+      "환율",
+      "호가 스프레드의 시간대별 차이",
+      "대차·공매도",
+      "실제 Toss 주문 제약"
+    ]
+  },
+  "selectionPolicy": {
+    "minimumOverallExcessCagrPct": 1,
+    "minimumSegmentExcessCagrPct": 0,
+    "minimumDoubleCostExcessCagrPct": 0,
+    "minimumRollingFiveYearBeatRatePct": 60,
+    "maximumDrawdownPenaltyPct": 5,
+    "segmentRule": "개발·검증·홀드아웃의 SPY 대비 CAGR이 모두 0% 초과",
+    "note": "결과 확인 전에 고정했으며 이번 결과를 보고 임계값이나 전략 파라미터를 변경하지 않음"
+  },
+  "dataDiagnostics": {
+    "requestedSymbols": 19,
+    "loadedSymbols": 19,
+    "failures": [],
+    "firstAvailableBySymbol": {
+      "BIL": "2007-05-30",
+      "GLD": "2004-11-18",
+      "IEF": "2002-07-30",
+      "IWD": "2000-05-26",
+      "IWF": "2000-05-26",
+      "IWM": "2000-05-26",
+      "MDY": "1995-05-04",
+      "QQQ": "1999-03-10",
+      "SPY": "1993-01-29",
+      "SSO": "2006-06-21",
+      "XLB": "1998-12-22",
+      "XLE": "1998-12-22",
+      "XLF": "1998-12-22",
+      "XLI": "1998-12-22",
+      "XLK": "1998-12-22",
+      "XLP": "1998-12-22",
+      "XLU": "1998-12-22",
+      "XLV": "1998-12-22",
+      "XLY": "1998-12-22"
+    },
+    "simulationFirstDate": "2008-07-01",
+    "simulationLastDate": "2026-07-13",
+    "tradingDays": 4535,
+    "benchmarkPriceSanity": {
+      "firstOpen": 91.01583845392321,
+      "lastClose": 749.1699829101562
+    }
+  },
+  "candidates": [
+    {
+      "id": "sector_momentum_top3",
+      "label": "9개 섹터 모멘텀 상위 3개",
+      "description": "12-1개월과 6-1개월 상대 모멘텀 상위 섹터 3개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체"
+    },
+    {
+      "id": "sector_momentum_trend",
+      "label": "섹터 모멘텀 + 200일 추세",
+      "description": "상위 섹터 3개 중 BIL보다 강하고 200일 이동평균 위에 있는 섹터만 보유하고 나머지는 BIL로 대체"
+    },
+    {
+      "id": "style_momentum_top2",
+      "label": "미국 주식 스타일 모멘텀 상위 2개",
+      "description": "SPY·QQQ·IWM·MDY·IWD·IWF 중 중기 모멘텀 상위 2개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체"
+    },
+    {
+      "id": "dual_momentum",
+      "label": "주식·채권·금 듀얼 모멘텀",
+      "description": "주식 대표 ETF 중 절대·상대 모멘텀 1위를 보유하고, 주식 모멘텀이 현금보다 낮으면 채권·금·BIL 중 1위로 이동"
+    },
+    {
+      "id": "spy_trend_volatility",
+      "label": "SPY 추세·변동성 관리",
+      "description": "SPY가 200일선 위일 때 63일 변동성으로 0.75~1.5배 노출을 정하고, 아래일 때 BIL을 보유"
+    },
+    {
+      "id": "sector_trend_vol_ensemble",
+      "label": "섹터 추세 + 변동성 관리 앙상블",
+      "description": "섹터 모멘텀·추세 포트폴리오와 SPY 추세·변동성 포트폴리오를 절반씩 결합"
+    }
+  ],
+  "scenarios": {
+    "base": {
+      "costPerSidePct": 0.1,
+      "benchmark": {
+        "id": "spy_buy_hold",
+        "label": "SPY 100% 매수보유",
+        "description": "배당이 반영된 SPY를 첫 거래일부터 계속 보유",
+        "overall": {
+          "from": "2008-07-01",
+          "to": "2026-07-13",
+          "endingEquity": 822298.16,
+          "totalReturnPct": 722.3,
+          "cagrPct": 12.39,
+          "maxDrawdownPct": 47.17,
+          "annualizedVolatilityPct": 19.79,
+          "sharpeZeroRate": 0.691,
+          "calmar": 0.263,
+          "rebalances": 217,
+          "transactionCosts": 99.9,
+          "annualOneWayTurnoverPct": 0.96,
+          "averageEquityExposurePct": 100
+        },
+        "segments": {
+          "development": {
+            "from": "2008-07-01",
+            "to": "2013-12-31",
+            "endingEquity": 164238.47,
+            "totalReturnPct": 62.02,
+            "cagrPct": 9.17,
+            "maxDrawdownPct": 47.17,
+            "annualizedVolatilityPct": 24.68,
+            "sharpeZeroRate": 0.479,
+            "calmar": 0.194
+          },
+          "validation": {
+            "from": "2014-01-02",
+            "to": "2019-12-31",
+            "endingEquity": 322019.2,
+            "totalReturnPct": 97.97,
+            "cagrPct": 12.07,
+            "maxDrawdownPct": 19.35,
+            "annualizedVolatilityPct": 13.07,
+            "sharpeZeroRate": 0.938,
+            "calmar": 0.624
+          },
+          "holdout": {
+            "from": "2020-01-02",
+            "to": "2026-07-13",
+            "endingEquity": 822298.16,
+            "totalReturnPct": 152.99,
+            "cagrPct": 15.28,
+            "maxDrawdownPct": 33.72,
+            "annualizedVolatilityPct": 20.27,
+            "sharpeZeroRate": 0.806,
+            "calmar": 0.453
+          }
+        },
+        "averageTargetWeightsPct": {
+          "SPY": 100
+        },
+        "costPerSidePct": 0.1
+      },
+      "candidates": [
+        {
+          "id": "sector_momentum_top3",
+          "label": "9개 섹터 모멘텀 상위 3개",
+          "description": "12-1개월과 6-1개월 상대 모멘텀 상위 섹터 3개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 414070.41,
+            "totalReturnPct": 314.07,
+            "cagrPct": 8.2,
+            "maxDrawdownPct": 36.48,
+            "annualizedVolatilityPct": 17.29,
+            "sharpeZeroRate": 0.543,
+            "calmar": 0.225,
+            "rebalances": 217,
+            "transactionCosts": 22415.62,
+            "annualOneWayTurnoverPct": 297.93,
+            "averageEquityExposurePct": 92.06
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 146470.06,
+              "totalReturnPct": 45.77,
+              "cagrPct": 7.09,
+              "maxDrawdownPct": 22.27,
+              "annualizedVolatilityPct": 16.65,
+              "sharpeZeroRate": 0.495,
+              "calmar": 0.318,
+              "excessCagrPct": -2.08
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 237399.45,
+              "totalReturnPct": 63.4,
+              "cagrPct": 8.54,
+              "maxDrawdownPct": 14.58,
+              "annualizedVolatilityPct": 13.32,
+              "sharpeZeroRate": 0.682,
+              "calmar": 0.586,
+              "excessCagrPct": -3.53
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 414070.41,
+              "totalReturnPct": 72.09,
+              "cagrPct": 8.67,
+              "maxDrawdownPct": 36.48,
+              "annualizedVolatilityPct": 20.72,
+              "sharpeZeroRate": 0.507,
+              "calmar": 0.238,
+              "excessCagrPct": -6.61
+            }
+          },
+          "averageTargetWeightsPct": {
+            "XLK": 15.98,
+            "XLY": 14.29,
+            "XLF": 10.75,
+            "XLI": 10.45,
+            "XLU": 9.98,
+            "XLV": 9.37,
+            "XLE": 8.45,
+            "BIL": 7.99,
+            "XLP": 7.53,
+            "XLB": 5.22
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": -4.19,
+            "maxDrawdownDifferencePct": -10.69,
+            "trackingErrorPct": 12.48,
+            "informationRatio": -0.339,
+            "rollingFiveYearBeatRatePct": 1.91,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -87.4,
+            "bestRollingFiveYearExcessPct": 2.59
+          }
+        },
+        {
+          "id": "sector_momentum_trend",
+          "label": "섹터 모멘텀 + 200일 추세",
+          "description": "상위 섹터 3개 중 BIL보다 강하고 200일 이동평균 위에 있는 섹터만 보유하고 나머지는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 368857.44,
+            "totalReturnPct": 268.86,
+            "cagrPct": 7.51,
+            "maxDrawdownPct": 20.06,
+            "annualizedVolatilityPct": 14.08,
+            "sharpeZeroRate": 0.586,
+            "calmar": 0.374,
+            "rebalances": 217,
+            "transactionCosts": 24076,
+            "annualOneWayTurnoverPct": 330.58,
+            "averageEquityExposurePct": 84.44
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 153381.68,
+              "totalReturnPct": 53.35,
+              "cagrPct": 8.08,
+              "maxDrawdownPct": 20.06,
+              "annualizedVolatilityPct": 14.08,
+              "sharpeZeroRate": 0.623,
+              "calmar": 0.403,
+              "excessCagrPct": -1.09
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 230898.89,
+              "totalReturnPct": 51.77,
+              "cagrPct": 7.21,
+              "maxDrawdownPct": 17.68,
+              "annualizedVolatilityPct": 12.25,
+              "sharpeZeroRate": 0.63,
+              "calmar": 0.408,
+              "excessCagrPct": -4.86
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 368857.44,
+              "totalReturnPct": 57.61,
+              "cagrPct": 7.22,
+              "maxDrawdownPct": 19.18,
+              "annualizedVolatilityPct": 15.56,
+              "sharpeZeroRate": 0.528,
+              "calmar": 0.376,
+              "excessCagrPct": -8.06
+            }
+          },
+          "averageTargetWeightsPct": {
+            "BIL": 15.51,
+            "XLK": 15.51,
+            "XLY": 12.9,
+            "XLF": 9.98,
+            "XLI": 9.98,
+            "XLU": 8.91,
+            "XLV": 8.45,
+            "XLE": 7.68,
+            "XLP": 6.14,
+            "XLB": 4.92
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": -4.88,
+            "maxDrawdownDifferencePct": -27.11,
+            "trackingErrorPct": 14.3,
+            "informationRatio": -0.374,
+            "rollingFiveYearBeatRatePct": 3.18,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -99.5,
+            "bestRollingFiveYearExcessPct": 7.77
+          }
+        },
+        {
+          "id": "style_momentum_top2",
+          "label": "미국 주식 스타일 모멘텀 상위 2개",
+          "description": "SPY·QQQ·IWM·MDY·IWD·IWF 중 중기 모멘텀 상위 2개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 743807.63,
+            "totalReturnPct": 643.81,
+            "cagrPct": 11.77,
+            "maxDrawdownPct": 29.73,
+            "annualizedVolatilityPct": 18,
+            "sharpeZeroRate": 0.71,
+            "calmar": 0.396,
+            "rebalances": 217,
+            "transactionCosts": 31102.62,
+            "annualOneWayTurnoverPct": 279.26,
+            "averageEquityExposurePct": 84.46
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 195110.29,
+              "totalReturnPct": 93.17,
+              "cagrPct": 12.72,
+              "maxDrawdownPct": 23.84,
+              "annualizedVolatilityPct": 16.74,
+              "sharpeZeroRate": 0.799,
+              "calmar": 0.533,
+              "excessCagrPct": 3.55
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 331912,
+              "totalReturnPct": 71.72,
+              "cagrPct": 9.44,
+              "maxDrawdownPct": 23.29,
+              "annualizedVolatilityPct": 15.06,
+              "sharpeZeroRate": 0.675,
+              "calmar": 0.405,
+              "excessCagrPct": -2.63
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 743807.63,
+              "totalReturnPct": 120.73,
+              "cagrPct": 12.9,
+              "maxDrawdownPct": 29.73,
+              "annualizedVolatilityPct": 21.21,
+              "sharpeZeroRate": 0.681,
+              "calmar": 0.434,
+              "excessCagrPct": -2.38
+            }
+          },
+          "averageTargetWeightsPct": {
+            "QQQ": 30.18,
+            "IWF": 22.58,
+            "BIL": 15.44,
+            "IWM": 11.52,
+            "MDY": 10.83,
+            "IWD": 4.84,
+            "SPY": 4.61
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": -0.62,
+            "maxDrawdownDifferencePct": -17.44,
+            "trackingErrorPct": 13.64,
+            "informationRatio": -0.064,
+            "rollingFiveYearBeatRatePct": 7.01,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -75.84,
+            "bestRollingFiveYearExcessPct": 28.88
+          }
+        },
+        {
+          "id": "dual_momentum",
+          "label": "주식·채권·금 듀얼 모멘텀",
+          "description": "주식 대표 ETF 중 절대·상대 모멘텀 1위를 보유하고, 주식 모멘텀이 현금보다 낮으면 채권·금·BIL 중 1위로 이동",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 1007910.13,
+            "totalReturnPct": 907.91,
+            "cagrPct": 13.67,
+            "maxDrawdownPct": 29.72,
+            "annualizedVolatilityPct": 19.92,
+            "sharpeZeroRate": 0.745,
+            "calmar": 0.46,
+            "rebalances": 217,
+            "transactionCosts": 50590.73,
+            "annualOneWayTurnoverPct": 344.38,
+            "averageEquityExposurePct": 85.18
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 223070.75,
+              "totalReturnPct": 118.42,
+              "cagrPct": 15.26,
+              "maxDrawdownPct": 24.48,
+              "annualizedVolatilityPct": 20.51,
+              "sharpeZeroRate": 0.795,
+              "calmar": 0.624,
+              "excessCagrPct": 6.09
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 475270.62,
+              "totalReturnPct": 114.67,
+              "cagrPct": 13.59,
+              "maxDrawdownPct": 22.8,
+              "annualizedVolatilityPct": 16.53,
+              "sharpeZeroRate": 0.854,
+              "calmar": 0.596,
+              "excessCagrPct": 1.52
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 1007910.13,
+              "totalReturnPct": 108.59,
+              "cagrPct": 11.92,
+              "maxDrawdownPct": 29.72,
+              "annualizedVolatilityPct": 22.11,
+              "sharpeZeroRate": 0.622,
+              "calmar": 0.401,
+              "excessCagrPct": -3.36
+            }
+          },
+          "averageTargetWeightsPct": {
+            "QQQ": 56.68,
+            "IWM": 20.28,
+            "SPY": 8.29,
+            "GLD": 7.37,
+            "IEF": 4.61,
+            "BIL": 2.76
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": 1.28,
+            "maxDrawdownDifferencePct": -17.45,
+            "trackingErrorPct": 16.54,
+            "informationRatio": 0.067,
+            "rollingFiveYearBeatRatePct": 52.23,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -63.31,
+            "bestRollingFiveYearExcessPct": 67.29
+          }
+        },
+        {
+          "id": "spy_trend_volatility",
+          "label": "SPY 추세·변동성 관리",
+          "description": "SPY가 200일선 위일 때 63일 변동성으로 0.75~1.5배 노출을 정하고, 아래일 때 BIL을 보유",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 548420.13,
+            "totalReturnPct": 448.42,
+            "cagrPct": 9.9,
+            "maxDrawdownPct": 30.18,
+            "annualizedVolatilityPct": 16.2,
+            "sharpeZeroRate": 0.665,
+            "calmar": 0.328,
+            "rebalances": 217,
+            "transactionCosts": 22788.5,
+            "annualOneWayTurnoverPct": 232.02,
+            "averageEquityExposurePct": 77.98
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 200618.18,
+              "totalReturnPct": 100.86,
+              "cagrPct": 13.52,
+              "maxDrawdownPct": 22.41,
+              "annualizedVolatilityPct": 16.48,
+              "sharpeZeroRate": 0.853,
+              "calmar": 0.603,
+              "excessCagrPct": 4.35
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 298252.85,
+              "totalReturnPct": 50.84,
+              "cagrPct": 7.1,
+              "maxDrawdownPct": 30.18,
+              "annualizedVolatilityPct": 15.96,
+              "sharpeZeroRate": 0.51,
+              "calmar": 0.235,
+              "excessCagrPct": -4.97
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 548420.13,
+              "totalReturnPct": 81.4,
+              "cagrPct": 9.55,
+              "maxDrawdownPct": 24.66,
+              "annualizedVolatilityPct": 16.17,
+              "sharpeZeroRate": 0.648,
+              "calmar": 0.387,
+              "excessCagrPct": -5.73
+            }
+          },
+          "averageTargetWeightsPct": {
+            "SPY": 50.76,
+            "SSO": 27.3,
+            "BIL": 21.95
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": -2.49,
+            "maxDrawdownDifferencePct": -16.99,
+            "trackingErrorPct": 16.06,
+            "informationRatio": -0.175,
+            "rollingFiveYearBeatRatePct": 18.47,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -73.89,
+            "bestRollingFiveYearExcessPct": 28.64
+          }
+        },
+        {
+          "id": "sector_trend_vol_ensemble",
+          "label": "섹터 추세 + 변동성 관리 앙상블",
+          "description": "섹터 모멘텀·추세 포트폴리오와 SPY 추세·변동성 포트폴리오를 절반씩 결합",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 458509.17,
+            "totalReturnPct": 358.51,
+            "cagrPct": 8.81,
+            "maxDrawdownPct": 20.91,
+            "annualizedVolatilityPct": 14.39,
+            "sharpeZeroRate": 0.66,
+            "calmar": 0.421,
+            "rebalances": 217,
+            "transactionCosts": 24000.89,
+            "annualOneWayTurnoverPct": 281.12,
+            "averageEquityExposurePct": 81.21
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 176056.12,
+              "totalReturnPct": 76.15,
+              "cagrPct": 10.84,
+              "maxDrawdownPct": 20.91,
+              "annualizedVolatilityPct": 14.71,
+              "sharpeZeroRate": 0.774,
+              "calmar": 0.518,
+              "excessCagrPct": 1.67
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 265065.54,
+              "totalReturnPct": 52.27,
+              "cagrPct": 7.27,
+              "maxDrawdownPct": 18.76,
+              "annualizedVolatilityPct": 13.61,
+              "sharpeZeroRate": 0.584,
+              "calmar": 0.388,
+              "excessCagrPct": -4.8
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 458509.17,
+              "totalReturnPct": 70.66,
+              "cagrPct": 8.53,
+              "maxDrawdownPct": 18.45,
+              "annualizedVolatilityPct": 14.81,
+              "sharpeZeroRate": 0.629,
+              "calmar": 0.462,
+              "excessCagrPct": -6.75
+            }
+          },
+          "averageTargetWeightsPct": {
+            "SPY": 25.38,
+            "BIL": 18.73,
+            "SSO": 13.65,
+            "XLK": 7.76,
+            "XLY": 6.45,
+            "XLF": 4.99,
+            "XLI": 4.99,
+            "XLU": 4.45,
+            "XLV": 4.22,
+            "XLE": 3.84,
+            "XLP": 3.07,
+            "XLB": 2.46
+          },
+          "costPerSidePct": 0.1,
+          "relativeToSpy": {
+            "excessCagrPct": -3.58,
+            "maxDrawdownDifferencePct": -26.26,
+            "trackingErrorPct": 14.45,
+            "informationRatio": -0.283,
+            "rollingFiveYearBeatRatePct": 1.91,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -85.62,
+            "bestRollingFiveYearExcessPct": 13.3
+          }
+        }
+      ]
+    },
+    "doubleCost": {
+      "costPerSidePct": 0.2,
+      "benchmark": {
+        "id": "spy_buy_hold",
+        "label": "SPY 100% 매수보유",
+        "description": "배당이 반영된 SPY를 첫 거래일부터 계속 보유",
+        "overall": {
+          "from": "2008-07-01",
+          "to": "2026-07-13",
+          "endingEquity": 821477.5,
+          "totalReturnPct": 721.48,
+          "cagrPct": 12.39,
+          "maxDrawdownPct": 47.17,
+          "annualizedVolatilityPct": 19.79,
+          "sharpeZeroRate": 0.69,
+          "calmar": 0.263,
+          "rebalances": 217,
+          "transactionCosts": 199.6,
+          "annualOneWayTurnoverPct": 0.96,
+          "averageEquityExposurePct": 100
+        },
+        "segments": {
+          "development": {
+            "from": "2008-07-01",
+            "to": "2013-12-31",
+            "endingEquity": 164074.56,
+            "totalReturnPct": 62.02,
+            "cagrPct": 9.17,
+            "maxDrawdownPct": 47.17,
+            "annualizedVolatilityPct": 24.68,
+            "sharpeZeroRate": 0.479,
+            "calmar": 0.194
+          },
+          "validation": {
+            "from": "2014-01-02",
+            "to": "2019-12-31",
+            "endingEquity": 321697.82,
+            "totalReturnPct": 97.97,
+            "cagrPct": 12.07,
+            "maxDrawdownPct": 19.35,
+            "annualizedVolatilityPct": 13.07,
+            "sharpeZeroRate": 0.938,
+            "calmar": 0.624
+          },
+          "holdout": {
+            "from": "2020-01-02",
+            "to": "2026-07-13",
+            "endingEquity": 821477.5,
+            "totalReturnPct": 152.99,
+            "cagrPct": 15.28,
+            "maxDrawdownPct": 33.72,
+            "annualizedVolatilityPct": 20.27,
+            "sharpeZeroRate": 0.806,
+            "calmar": 0.453
+          }
+        },
+        "averageTargetWeightsPct": {
+          "SPY": 100
+        },
+        "costPerSidePct": 0.2
+      },
+      "candidates": [
+        {
+          "id": "sector_momentum_top3",
+          "label": "9개 섹터 모멘텀 상위 3개",
+          "description": "12-1개월과 6-1개월 상대 모멘텀 상위 섹터 3개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 373432.14,
+            "totalReturnPct": 273.43,
+            "cagrPct": 7.58,
+            "maxDrawdownPct": 36.48,
+            "annualizedVolatilityPct": 17.3,
+            "sharpeZeroRate": 0.51,
+            "calmar": 0.208,
+            "rebalances": 217,
+            "transactionCosts": 42010.2,
+            "annualOneWayTurnoverPct": 297.33,
+            "averageEquityExposurePct": 92.06
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 142296.97,
+              "totalReturnPct": 41.76,
+              "cagrPct": 6.55,
+              "maxDrawdownPct": 22.49,
+              "annualizedVolatilityPct": 16.66,
+              "sharpeZeroRate": 0.465,
+              "calmar": 0.291,
+              "excessCagrPct": -2.62
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 223436.24,
+              "totalReturnPct": 58.3,
+              "cagrPct": 7.97,
+              "maxDrawdownPct": 14.64,
+              "annualizedVolatilityPct": 13.32,
+              "sharpeZeroRate": 0.642,
+              "calmar": 0.544,
+              "excessCagrPct": -4.1
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 373432.14,
+              "totalReturnPct": 65.12,
+              "cagrPct": 7.99,
+              "maxDrawdownPct": 36.48,
+              "annualizedVolatilityPct": 20.72,
+              "sharpeZeroRate": 0.476,
+              "calmar": 0.219,
+              "excessCagrPct": -7.29
+            }
+          },
+          "averageTargetWeightsPct": {
+            "XLK": 15.98,
+            "XLY": 14.29,
+            "XLF": 10.75,
+            "XLI": 10.45,
+            "XLU": 9.98,
+            "XLV": 9.37,
+            "XLE": 8.45,
+            "BIL": 7.99,
+            "XLP": 7.53,
+            "XLB": 5.22
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": -4.81,
+            "maxDrawdownDifferencePct": -10.69,
+            "trackingErrorPct": 12.49,
+            "informationRatio": -0.384,
+            "rollingFiveYearBeatRatePct": 0,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -91.92,
+            "bestRollingFiveYearExcessPct": -1.82
+          }
+        },
+        {
+          "id": "sector_momentum_trend",
+          "label": "섹터 모멘텀 + 200일 추세",
+          "description": "상위 섹터 3개 중 BIL보다 강하고 200일 이동평균 위에 있는 섹터만 보유하고 나머지는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 327840.31,
+            "totalReturnPct": 227.84,
+            "cagrPct": 6.81,
+            "maxDrawdownPct": 20.33,
+            "annualizedVolatilityPct": 14.08,
+            "sharpeZeroRate": 0.539,
+            "calmar": 0.335,
+            "rebalances": 217,
+            "transactionCosts": 44777.83,
+            "annualOneWayTurnoverPct": 330.2,
+            "averageEquityExposurePct": 84.44
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 148164.26,
+              "totalReturnPct": 48.28,
+              "cagrPct": 7.42,
+              "maxDrawdownPct": 20.33,
+              "annualizedVolatilityPct": 14.08,
+              "sharpeZeroRate": 0.579,
+              "calmar": 0.365,
+              "excessCagrPct": -1.75
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 215112.57,
+              "totalReturnPct": 46.37,
+              "cagrPct": 6.56,
+              "maxDrawdownPct": 18.06,
+              "annualizedVolatilityPct": 12.26,
+              "sharpeZeroRate": 0.58,
+              "calmar": 0.363,
+              "excessCagrPct": -5.51
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 327840.31,
+              "totalReturnPct": 50.57,
+              "cagrPct": 6.47,
+              "maxDrawdownPct": 19.78,
+              "annualizedVolatilityPct": 15.55,
+              "sharpeZeroRate": 0.483,
+              "calmar": 0.327,
+              "excessCagrPct": -8.81
+            }
+          },
+          "averageTargetWeightsPct": {
+            "BIL": 15.51,
+            "XLK": 15.51,
+            "XLY": 12.9,
+            "XLF": 9.98,
+            "XLI": 9.98,
+            "XLU": 8.91,
+            "XLV": 8.45,
+            "XLE": 7.68,
+            "XLP": 6.14,
+            "XLB": 4.92
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": -5.58,
+            "maxDrawdownDifferencePct": -26.84,
+            "trackingErrorPct": 14.31,
+            "informationRatio": -0.419,
+            "rollingFiveYearBeatRatePct": 2.55,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -104.82,
+            "bestRollingFiveYearExcessPct": 2.81
+          }
+        },
+        {
+          "id": "style_momentum_top2",
+          "label": "미국 주식 스타일 모멘텀 상위 2개",
+          "description": "SPY·QQQ·IWM·MDY·IWD·IWF 중 중기 모멘텀 상위 2개를 동일 비중으로 보유하되 BIL보다 약한 자리는 BIL로 대체",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 673711.12,
+            "totalReturnPct": 573.71,
+            "cagrPct": 11.16,
+            "maxDrawdownPct": 29.73,
+            "annualizedVolatilityPct": 18,
+            "sharpeZeroRate": 0.679,
+            "calmar": 0.375,
+            "rebalances": 217,
+            "transactionCosts": 58324.51,
+            "annualOneWayTurnoverPct": 279,
+            "averageEquityExposurePct": 84.46
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 190244.65,
+              "totalReturnPct": 88.54,
+              "cagrPct": 12.22,
+              "maxDrawdownPct": 23.84,
+              "annualizedVolatilityPct": 16.73,
+              "sharpeZeroRate": 0.773,
+              "calmar": 0.513,
+              "excessCagrPct": 3.05
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 311138.31,
+              "totalReturnPct": 65.09,
+              "cagrPct": 8.72,
+              "maxDrawdownPct": 23.36,
+              "annualizedVolatilityPct": 15.07,
+              "sharpeZeroRate": 0.631,
+              "calmar": 0.373,
+              "excessCagrPct": -3.35
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 673711.12,
+              "totalReturnPct": 113.28,
+              "cagrPct": 12.3,
+              "maxDrawdownPct": 29.73,
+              "annualizedVolatilityPct": 21.21,
+              "sharpeZeroRate": 0.656,
+              "calmar": 0.414,
+              "excessCagrPct": -2.98
+            }
+          },
+          "averageTargetWeightsPct": {
+            "QQQ": 30.18,
+            "IWF": 22.58,
+            "BIL": 15.44,
+            "IWM": 11.52,
+            "MDY": 10.83,
+            "IWD": 4.84,
+            "SPY": 4.61
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": -1.23,
+            "maxDrawdownDifferencePct": -17.44,
+            "trackingErrorPct": 13.65,
+            "informationRatio": -0.104,
+            "rollingFiveYearBeatRatePct": 2.55,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -80.39,
+            "bestRollingFiveYearExcessPct": 25.16
+          }
+        },
+        {
+          "id": "dual_momentum",
+          "label": "주식·채권·금 듀얼 모멘텀",
+          "description": "주식 대표 ETF 중 절대·상대 모멘텀 1위를 보유하고, 주식 모멘텀이 현금보다 낮으면 채권·금·BIL 중 1위로 이동",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 893043.69,
+            "totalReturnPct": 793.04,
+            "cagrPct": 12.91,
+            "maxDrawdownPct": 30.42,
+            "annualizedVolatilityPct": 19.92,
+            "sharpeZeroRate": 0.711,
+            "calmar": 0.424,
+            "rebalances": 217,
+            "transactionCosts": 93340.06,
+            "annualOneWayTurnoverPct": 343.6,
+            "averageEquityExposurePct": 85.18
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 215398.63,
+              "totalReturnPct": 111.12,
+              "cagrPct": 14.55,
+              "maxDrawdownPct": 24.64,
+              "annualizedVolatilityPct": 20.51,
+              "sharpeZeroRate": 0.765,
+              "calmar": 0.591,
+              "excessCagrPct": 5.38
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 440048.83,
+              "totalReturnPct": 106.25,
+              "cagrPct": 12.84,
+              "maxDrawdownPct": 22.8,
+              "annualizedVolatilityPct": 16.55,
+              "sharpeZeroRate": 0.813,
+              "calmar": 0.563,
+              "excessCagrPct": 0.77
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 893043.69,
+              "totalReturnPct": 99.61,
+              "cagrPct": 11.17,
+              "maxDrawdownPct": 30.42,
+              "annualizedVolatilityPct": 22.11,
+              "sharpeZeroRate": 0.592,
+              "calmar": 0.367,
+              "excessCagrPct": -4.11
+            }
+          },
+          "averageTargetWeightsPct": {
+            "QQQ": 56.68,
+            "IWM": 20.28,
+            "SPY": 8.29,
+            "GLD": 7.37,
+            "IEF": 4.61,
+            "BIL": 2.76
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": 0.52,
+            "maxDrawdownDifferencePct": -16.75,
+            "trackingErrorPct": 16.54,
+            "informationRatio": 0.027,
+            "rollingFiveYearBeatRatePct": 40.76,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -69.31,
+            "bestRollingFiveYearExcessPct": 60.76
+          }
+        },
+        {
+          "id": "spy_trend_volatility",
+          "label": "SPY 추세·변동성 관리",
+          "description": "SPY가 200일선 위일 때 63일 변동성으로 0.75~1.5배 노출을 정하고, 아래일 때 BIL을 보유",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 507059.13,
+            "totalReturnPct": 407.06,
+            "cagrPct": 9.42,
+            "maxDrawdownPct": 31.07,
+            "annualizedVolatilityPct": 16.21,
+            "sharpeZeroRate": 0.638,
+            "calmar": 0.303,
+            "rebalances": 217,
+            "transactionCosts": 43442.48,
+            "annualOneWayTurnoverPct": 231.05,
+            "averageEquityExposurePct": 77.98
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 197243.22,
+              "totalReturnPct": 97.68,
+              "cagrPct": 13.19,
+              "maxDrawdownPct": 22.46,
+              "annualizedVolatilityPct": 16.48,
+              "sharpeZeroRate": 0.835,
+              "calmar": 0.587,
+              "excessCagrPct": 4.02
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 285182.97,
+              "totalReturnPct": 46.7,
+              "cagrPct": 6.6,
+              "maxDrawdownPct": 31.07,
+              "annualizedVolatilityPct": 15.98,
+              "sharpeZeroRate": 0.481,
+              "calmar": 0.213,
+              "excessCagrPct": -5.47
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 507059.13,
+              "totalReturnPct": 75.41,
+              "cagrPct": 8.99,
+              "maxDrawdownPct": 25.48,
+              "annualizedVolatilityPct": 16.17,
+              "sharpeZeroRate": 0.616,
+              "calmar": 0.353,
+              "excessCagrPct": -6.29
+            }
+          },
+          "averageTargetWeightsPct": {
+            "SPY": 50.76,
+            "SSO": 27.3,
+            "BIL": 21.95
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": -2.97,
+            "maxDrawdownDifferencePct": -16.1,
+            "trackingErrorPct": 16.07,
+            "informationRatio": -0.202,
+            "rollingFiveYearBeatRatePct": 17.83,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -78.22,
+            "bestRollingFiveYearExcessPct": 25.72
+          }
+        },
+        {
+          "id": "sector_trend_vol_ensemble",
+          "label": "섹터 추세 + 변동성 관리 앙상블",
+          "description": "섹터 모멘텀·추세 포트폴리오와 SPY 추세·변동성 포트폴리오를 절반씩 결합",
+          "overall": {
+            "from": "2008-07-01",
+            "to": "2026-07-13",
+            "endingEquity": 415767.32,
+            "totalReturnPct": 315.77,
+            "cagrPct": 8.22,
+            "maxDrawdownPct": 21.02,
+            "annualizedVolatilityPct": 14.4,
+            "sharpeZeroRate": 0.622,
+            "calmar": 0.391,
+            "rebalances": 217,
+            "transactionCosts": 45184.67,
+            "annualOneWayTurnoverPct": 280.36,
+            "averageEquityExposurePct": 81.21
+          },
+          "segments": {
+            "development": {
+              "from": "2008-07-01",
+              "to": "2013-12-31",
+              "endingEquity": 171584.72,
+              "totalReturnPct": 71.84,
+              "cagrPct": 10.34,
+              "maxDrawdownPct": 21.02,
+              "annualizedVolatilityPct": 14.71,
+              "sharpeZeroRate": 0.743,
+              "calmar": 0.492,
+              "excessCagrPct": 1.17
+            },
+            "validation": {
+              "from": "2014-01-02",
+              "to": "2019-12-31",
+              "endingEquity": 250246.3,
+              "totalReturnPct": 47.51,
+              "cagrPct": 6.7,
+              "maxDrawdownPct": 19.48,
+              "annualizedVolatilityPct": 13.62,
+              "sharpeZeroRate": 0.545,
+              "calmar": 0.344,
+              "excessCagrPct": -5.37
+            },
+            "holdout": {
+              "from": "2020-01-02",
+              "to": "2026-07-13",
+              "endingEquity": 415767.32,
+              "totalReturnPct": 64.02,
+              "cagrPct": 7.88,
+              "maxDrawdownPct": 19.35,
+              "annualizedVolatilityPct": 14.8,
+              "sharpeZeroRate": 0.588,
+              "calmar": 0.407,
+              "excessCagrPct": -7.4
+            }
+          },
+          "averageTargetWeightsPct": {
+            "SPY": 25.38,
+            "BIL": 18.73,
+            "SSO": 13.65,
+            "XLK": 7.76,
+            "XLY": 6.45,
+            "XLF": 4.99,
+            "XLI": 4.99,
+            "XLU": 4.45,
+            "XLV": 4.22,
+            "XLE": 3.84,
+            "XLP": 3.07,
+            "XLB": 2.46
+          },
+          "costPerSidePct": 0.2,
+          "relativeToSpy": {
+            "excessCagrPct": -4.17,
+            "maxDrawdownDifferencePct": -26.15,
+            "trackingErrorPct": 14.46,
+            "informationRatio": -0.32,
+            "rollingFiveYearBeatRatePct": 1.91,
+            "rollingFiveYearWindows": 157,
+            "worstRollingFiveYearExcessPct": -89.99,
+            "bestRollingFiveYearExcessPct": 9.75
+          }
+        }
+      ]
+    }
+  },
+  "selection": {
+    "survivors": [],
+    "rejected": [
+      "sector_momentum_top3",
+      "sector_momentum_trend",
+      "style_momentum_top2",
+      "dual_momentum",
+      "spy_trend_volatility",
+      "sector_trend_vol_ensemble"
+    ],
+    "rows": [
+      {
+        "id": "sector_momentum_top3",
+        "label": "9개 섹터 모멘텀 상위 3개",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": false,
+          "positiveValidation": false,
+          "positiveHoldout": false,
+          "doubleCostExcess": false,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 8.2,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": -4.19,
+          "validationExcessCagrPct": -3.53,
+          "holdoutExcessCagrPct": -6.61,
+          "doubleCostExcessCagrPct": -4.81,
+          "maxDrawdownPct": 36.48,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 1.91
+        }
+      },
+      {
+        "id": "sector_momentum_trend",
+        "label": "섹터 모멘텀 + 200일 추세",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": false,
+          "positiveValidation": false,
+          "positiveHoldout": false,
+          "doubleCostExcess": false,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 7.51,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": -4.88,
+          "validationExcessCagrPct": -4.86,
+          "holdoutExcessCagrPct": -8.06,
+          "doubleCostExcessCagrPct": -5.58,
+          "maxDrawdownPct": 20.06,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 3.18
+        }
+      },
+      {
+        "id": "style_momentum_top2",
+        "label": "미국 주식 스타일 모멘텀 상위 2개",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": true,
+          "positiveValidation": false,
+          "positiveHoldout": false,
+          "doubleCostExcess": false,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 11.77,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": -0.62,
+          "validationExcessCagrPct": -2.63,
+          "holdoutExcessCagrPct": -2.38,
+          "doubleCostExcessCagrPct": -1.23,
+          "maxDrawdownPct": 29.73,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 7.01
+        }
+      },
+      {
+        "id": "dual_momentum",
+        "label": "주식·채권·금 듀얼 모멘텀",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": true,
+          "positiveDevelopment": true,
+          "positiveValidation": true,
+          "positiveHoldout": false,
+          "doubleCostExcess": true,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 13.67,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": 1.28,
+          "validationExcessCagrPct": 1.52,
+          "holdoutExcessCagrPct": -3.36,
+          "doubleCostExcessCagrPct": 0.52,
+          "maxDrawdownPct": 29.72,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 52.23
+        }
+      },
+      {
+        "id": "spy_trend_volatility",
+        "label": "SPY 추세·변동성 관리",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": true,
+          "positiveValidation": false,
+          "positiveHoldout": false,
+          "doubleCostExcess": false,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 9.9,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": -2.49,
+          "validationExcessCagrPct": -4.97,
+          "holdoutExcessCagrPct": -5.73,
+          "doubleCostExcessCagrPct": -2.97,
+          "maxDrawdownPct": 30.18,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 18.47
+        }
+      },
+      {
+        "id": "sector_trend_vol_ensemble",
+        "label": "섹터 추세 + 변동성 관리 앙상블",
+        "passed": false,
+        "checks": {
+          "overallExcessCagr": false,
+          "positiveDevelopment": true,
+          "positiveValidation": false,
+          "positiveHoldout": false,
+          "doubleCostExcess": false,
+          "rollingFiveYearConsistency": false,
+          "drawdownControl": true
+        },
+        "evidence": {
+          "cagrPct": 8.81,
+          "spyCagrPct": 12.39,
+          "excessCagrPct": -3.58,
+          "validationExcessCagrPct": -4.8,
+          "holdoutExcessCagrPct": -6.75,
+          "doubleCostExcessCagrPct": -4.17,
+          "maxDrawdownPct": 20.91,
+          "spyMaxDrawdownPct": 47.17,
+          "rollingFiveYearBeatRatePct": 1.91
+        }
+      }
+    ]
+  }
+}

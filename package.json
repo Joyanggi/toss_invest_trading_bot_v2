@@ -5,6 +5,8 @@
   "type": "module",
   "description": "Research-first trading strategy project for explainable US large-cap signals.",
   "scripts": {
+    "research:benchmark": "node research/benchmark-challenger-backtest.mjs --output research/results/benchmark-challenger-2026-07-15.json",
+    "research:benchmark:verify": "node research/verify-benchmark-challenger.mjs",
     "research:v2": "node research/v2-strategy-backtest.mjs --output research/results/v2-strategy-backtest-latest.json",
     "research:v2:archive": "node research/v2-strategy-backtest.mjs --strategy-set archive --output research/results/v2-strategy-archive-latest.json",
     "research:v2:verify": "node research/verify-v2-strategy-backtest.mjs"
