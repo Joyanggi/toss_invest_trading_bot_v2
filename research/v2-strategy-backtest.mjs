@@ -28,7 +28,7 @@ const CONFIG = {
   ]
 };
 
-const STRATEGIES = [
+const ALL_CORE_STRATEGIES = [
   {
     id: "rsi2_pullback",
     label: "RSI(2) 반등 + SMA200",
@@ -123,6 +123,15 @@ const STRATEGIES = [
   }
 ];
 
+const ACTIVE_STRATEGY_IDS = Object.freeze([
+  "rsi14_recovery",
+  "ema_trend",
+  "donchian_breakout",
+  "cross_sectional_momentum"
+]);
+const ACTIVE_STRATEGY_ID_SET = new Set(ACTIVE_STRATEGY_IDS);
+const ACTIVE_STRATEGIES = ALL_CORE_STRATEGIES.filter((strategy) => ACTIVE_STRATEGY_ID_SET.has(strategy.id));
+
 const SENSITIVITY_STRATEGIES = [
   makeEmaTrendStrategy(10, 50),
   makeEmaTrendStrategy(20, 100),
@@ -147,9 +156,9 @@ async function main() {
     throw new Error("--require-history-before 값은 YYYY-MM-DD 형식이어야 합니다.");
   }
   const strategySetArg = process.argv.indexOf("--strategy-set");
-  const strategySet = strategySetArg >= 0 ? process.argv[strategySetArg + 1] : "core";
-  if (!new Set(["core", "sensitivity"]).has(strategySet)) {
-    throw new Error("--strategy-set 값은 core 또는 sensitivity여야 합니다.");
+  const strategySet = strategySetArg >= 0 ? process.argv[strategySetArg + 1] : "active";
+  if (!new Set(["active", "archive", "sensitivity"]).has(strategySet)) {
+    throw new Error("--strategy-set 값은 active, archive 또는 sensitivity여야 합니다.");
   }
   const universeRows = JSON.parse(await fs.readFile(UNIVERSE_PATH, "utf8"));
   const universe = universeRows.map(([symbol, sector]) => ({ symbol, sector }));
@@ -180,7 +189,12 @@ async function main() {
       return candles.length >= 260 && (!requireHistoryBefore || candles[0].date <= requireHistoryBefore);
     });
   const context = createContext({ data, spy, eligibleSymbols, sectorBySymbol });
-  const selectedStrategies = strategySet === "sensitivity" ? SENSITIVITY_STRATEGIES : STRATEGIES;
+  const selectedStrategies =
+    strategySet === "sensitivity"
+      ? SENSITIVITY_STRATEGIES
+      : strategySet === "archive"
+        ? ALL_CORE_STRATEGIES
+        : ACTIVE_STRATEGIES;
   const strategies = selectedStrategies.map((strategy) => simulateStrategy(strategy, context));
   const benchmarks = [simulateSpyBenchmark(spy, 0.6), simulateSpyBenchmark(spy, 1)];
   const result = {
@@ -201,6 +215,10 @@ async function main() {
       },
       commonEntryRegime: "SPY 종가 > SPY SMA200",
       strategySet,
+      candidatePolicy:
+        strategySet === "active"
+          ? "기본·개발·검증·홀드아웃 CAGR과 비용 2배·장기 이력 제한 검사의 같은 지표가 모두 0% 초과"
+          : null,
       requireHistoryBefore,
       dividendTreatment: "Yahoo adjusted OHLC에 반영",
       omitted: ["현금 이자", "실적발표 필터", "세금", "과거 시점별 S&P 100 편입 이력"]
@@ -851,4 +869,11 @@ if (isMain) {
   });
 }
 
-export { addIndicators, calculateMaxDrawdown, rollingPreviousExtreme, wilderAtr, wilderRsi };
+export {
+  ACTIVE_STRATEGY_IDS,
+  addIndicators,
+  calculateMaxDrawdown,
+  rollingPreviousExtreme,
+  wilderAtr,
+  wilderRsi
+};

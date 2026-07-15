@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  ACTIVE_STRATEGY_IDS,
   addIndicators,
   calculateMaxDrawdown,
   rollingPreviousExtreme
@@ -42,7 +43,7 @@ const doubleCost = await readResult("v2-strategy-backtest-2026-07-15-double-cost
 const longHistory = await readResult("v2-strategy-backtest-2026-07-15-long-history.json");
 const sensitivity = await readResult("v2-strategy-sensitivity-2026-07-15.json");
 
-assert.equal(base.strategies.length, 6, "핵심 후보 수가 6개가 아닙니다.");
+assert.equal(base.strategies.length, 6, "최초 비교 후보 수가 6개가 아닙니다.");
 assert.equal(base.dataDiagnostics.failures.length, 0, "가격 수집 실패가 있습니다.");
 assert.deepEqual(
   longHistory.dataDiagnostics.insufficientHistorySymbols.sort(),
@@ -59,6 +60,30 @@ for (const strategy of base.strategies) {
     `${strategy.id}는 거래비용을 높였는데 최종자산이 증가했습니다.`
   );
 }
+
+const screeningScenarios = [base, doubleCost, longHistory];
+const segmentIds = ["development", "validation", "holdout"];
+const screenedStrategyIds = base.strategies
+  .filter((strategy) =>
+    screeningScenarios.every((scenario) => {
+      const candidate = scenario.strategies.find((item) => item.id === strategy.id);
+      return (
+        candidate?.overall.cagrPct > 0 &&
+        segmentIds.every((segmentId) => candidate.segments[segmentId]?.cagrPct > 0)
+      );
+    })
+  )
+  .map((strategy) => strategy.id);
+assert.deepEqual(
+  screenedStrategyIds,
+  ACTIVE_STRATEGY_IDS,
+  "음수 수익 탈락 기준과 활성 후보 목록이 일치하지 않습니다."
+);
+assert.deepEqual(
+  base.strategies.filter((strategy) => !screenedStrategyIds.includes(strategy.id)).map((strategy) => strategy.id),
+  ["rsi2_pullback", "bollinger_reentry"],
+  "탈락 후보 목록이 예상과 다릅니다."
+);
 
 const coreEma = base.strategies.find((item) => item.id === "ema_trend");
 const sensitivityEma = sensitivity.strategies.find((item) => item.id === "ema_20_100");
