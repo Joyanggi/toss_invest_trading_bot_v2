@@ -1,0 +1,14 @@
+{
+  "name": "toss-invest-trading-bot-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Research-first trading strategy project for explainable US large-cap signals.",
+  "scripts": {
+    "research:v2": "node research/v2-strategy-backtest.mjs --output research/results/v2-strategy-backtest-latest.json",
+    "research:v2:verify": "node research/verify-v2-strategy-backtest.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

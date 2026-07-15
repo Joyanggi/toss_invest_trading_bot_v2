@@ -1,0 +1,1004 @@
+{
+  "generatedAt": "2026-07-15T04:36:26.492Z",
+  "methodology": {
+    "universe": "2026-07-15 현재 S&P 100 구성 종목 스냅샷(Alphabet 중복 주식 종류 제외)",
+    "survivorshipBias": true,
+    "priceSource": "Yahoo Finance adjusted daily OHLC",
+    "execution": "종가 신호 후 다음 거래일 시가 체결",
+    "costPerSidePct": 0.1,
+    "commonRisk": {
+      "maxPositions": 8,
+      "maxPositionPct": 10,
+      "maxGrossPct": 60,
+      "maxSectorPct": 20,
+      "riskPerTradePct": 0.5,
+      "stop": "2.5 ATR, 4%~10% 범위"
+    },
+    "commonEntryRegime": "SPY 종가 > SPY SMA200",
+    "strategySet": "sensitivity",
+    "requireHistoryBefore": "2017-01-01",
+    "dividendTreatment": "Yahoo adjusted OHLC에 반영",
+    "omitted": [
+      "현금 이자",
+      "실적발표 필터",
+      "세금",
+      "과거 시점별 S&P 100 편입 이력"
+    ]
+  },
+  "dataDiagnostics": {
+    "requestedSymbols": 101,
+    "loadedSymbols": 101,
+    "eligibleStocks": 96,
+    "insufficientHistorySymbols": [
+      "GEV",
+      "HONA",
+      "PLTR",
+      "UBER"
+    ],
+    "failures": [],
+    "firstDate": "2017-05-01",
+    "lastDate": "2026-07-13"
+  },
+  "strategies": [
+    {
+      "id": "ema_10_50",
+      "label": "EMA10/50 추세 + ATR",
+      "description": "EMA10이 EMA50을 상향 교차하면 진입",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 141014.54,
+        "totalReturnPct": 41.01,
+        "cagrPct": 3.81,
+        "maxDrawdownPct": 15.17,
+        "calmar": 0.251,
+        "annualizedVolatilityPct": 7.31,
+        "sharpeZeroRate": 0.549,
+        "averageExposurePct": 46.37,
+        "trades": 566,
+        "winRatePct": 36.57,
+        "profitFactor": 1.355,
+        "averageTradePct": 1.046,
+        "averageWinPct": 10.034,
+        "averageLossPct": -4.137,
+        "worstTradePct": -21.649,
+        "medianHoldDays": 16
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 110267.03,
+          "totalReturnPct": 10.27,
+          "cagrPct": 2.7,
+          "maxDrawdownPct": 8.09,
+          "calmar": 0.334,
+          "annualizedVolatilityPct": 6.97,
+          "sharpeZeroRate": 0.417,
+          "averageExposurePct": 48.31,
+          "trades": 224,
+          "winRatePct": 35.71,
+          "profitFactor": 1.086,
+          "averageTradePct": 0.035,
+          "averageWinPct": 6.2,
+          "averageLossPct": -3.39,
+          "worstTradePct": -12.573,
+          "medianHoldDays": 16.5
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 106166.95,
+          "totalReturnPct": 6.17,
+          "cagrPct": 2.03,
+          "maxDrawdownPct": 15.17,
+          "calmar": 0.134,
+          "annualizedVolatilityPct": 7.22,
+          "sharpeZeroRate": 0.314,
+          "averageExposurePct": 40.27,
+          "trades": 165,
+          "winRatePct": 30.91,
+          "profitFactor": 1.174,
+          "averageTradePct": 1.112,
+          "averageWinPct": 13.668,
+          "averageLossPct": -4.505,
+          "worstTradePct": -16.701,
+          "medianHoldDays": 16
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 121425.01,
+          "totalReturnPct": 21.43,
+          "cagrPct": 7.98,
+          "maxDrawdownPct": 8.56,
+          "calmar": 0.933,
+          "annualizedVolatilityPct": 7.88,
+          "sharpeZeroRate": 1.022,
+          "averageExposurePct": 50.77,
+          "trades": 177,
+          "winRatePct": 42.94,
+          "profitFactor": 1.805,
+          "averageTradePct": 2.263,
+          "averageWinPct": 11.63,
+          "averageLossPct": -4.785,
+          "worstTradePct": -21.649,
+          "medianHoldDays": 18
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 475,
+          "common_atr_stop": 83,
+          "end_of_data": 8
+        },
+        "pnlByYear": {
+          "2017": -1660.15,
+          "2018": 3265.84,
+          "2019": -517.98,
+          "2020": 2129.73,
+          "2021": 11837.82,
+          "2022": -9890.71,
+          "2023": 4921.49,
+          "2024": 12095.3,
+          "2025": -609.1,
+          "2026": 19442.31
+        },
+        "profitableYears": 6,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 8.21,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "MU",
+            "pnl": 10703.82
+          },
+          {
+            "symbol": "NVDA",
+            "pnl": 9623.59
+          },
+          {
+            "symbol": "BMY",
+            "pnl": 5765.31
+          },
+          {
+            "symbol": "COST",
+            "pnl": 4808.23
+          },
+          {
+            "symbol": "AMAT",
+            "pnl": 4016.2
+          }
+        ]
+      }
+    },
+    {
+      "id": "ema_20_100",
+      "label": "EMA20/100 추세 + ATR",
+      "description": "EMA20이 EMA100을 상향 교차하면 진입",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 158892.55,
+        "totalReturnPct": 58.89,
+        "cagrPct": 5.16,
+        "maxDrawdownPct": 9.18,
+        "calmar": 0.562,
+        "annualizedVolatilityPct": 6.72,
+        "sharpeZeroRate": 0.785,
+        "averageExposurePct": 42.99,
+        "trades": 415,
+        "winRatePct": 39.52,
+        "profitFactor": 1.648,
+        "averageTradePct": 1.7,
+        "averageWinPct": 10.886,
+        "averageLossPct": -4.303,
+        "worstTradePct": -21.649,
+        "medianHoldDays": 23
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 113567.72,
+          "totalReturnPct": 13.57,
+          "cagrPct": 3.53,
+          "maxDrawdownPct": 9.18,
+          "calmar": 0.384,
+          "annualizedVolatilityPct": 6.4,
+          "sharpeZeroRate": 0.574,
+          "averageExposurePct": 42.41,
+          "trades": 162,
+          "winRatePct": 37.65,
+          "profitFactor": 1.14,
+          "averageTradePct": 0.377,
+          "averageWinPct": 7.701,
+          "averageLossPct": -4.046,
+          "worstTradePct": -13.391,
+          "medianHoldDays": 22
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 111753.66,
+          "totalReturnPct": 11.75,
+          "cagrPct": 3.8,
+          "maxDrawdownPct": 8.35,
+          "calmar": 0.455,
+          "annualizedVolatilityPct": 6.42,
+          "sharpeZeroRate": 0.612,
+          "averageExposurePct": 39.13,
+          "trades": 121,
+          "winRatePct": 36.36,
+          "profitFactor": 1.576,
+          "averageTradePct": 1.987,
+          "averageWinPct": 13.373,
+          "averageLossPct": -4.52,
+          "worstTradePct": -11.78,
+          "medianHoldDays": 22
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 126078.76,
+          "totalReturnPct": 26.08,
+          "cagrPct": 9.6,
+          "maxDrawdownPct": 8.09,
+          "calmar": 1.187,
+          "annualizedVolatilityPct": 7.48,
+          "sharpeZeroRate": 1.273,
+          "averageExposurePct": 48.44,
+          "trades": 132,
+          "winRatePct": 44.7,
+          "profitFactor": 2.217,
+          "averageTradePct": 3.06,
+          "averageWinPct": 12.324,
+          "averageLossPct": -4.428,
+          "worstTradePct": -21.649,
+          "medianHoldDays": 24.5
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 331,
+          "common_atr_stop": 76,
+          "end_of_data": 8
+        },
+        "pnlByYear": {
+          "2017": -2017.48,
+          "2018": 268.38,
+          "2019": 2124.28,
+          "2020": 3879.75,
+          "2021": 13256.13,
+          "2022": -1680.87,
+          "2023": 5485.63,
+          "2024": 12516.41,
+          "2025": 2883.2,
+          "2026": 22177.13
+        },
+        "profitableYears": 8,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 6.83,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "NVDA",
+            "pnl": 9230.57
+          },
+          {
+            "symbol": "AMD",
+            "pnl": 6780.93
+          },
+          {
+            "symbol": "AAPL",
+            "pnl": 5211.81
+          },
+          {
+            "symbol": "GS",
+            "pnl": 4829.56
+          },
+          {
+            "symbol": "INTC",
+            "pnl": 4393.18
+          }
+        ]
+      }
+    },
+    {
+      "id": "ema_50_200",
+      "label": "EMA50/200 추세 + ATR",
+      "description": "EMA50이 EMA200을 상향 교차하면 진입",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 154544.63,
+        "totalReturnPct": 54.54,
+        "cagrPct": 4.85,
+        "maxDrawdownPct": 9.07,
+        "calmar": 0.534,
+        "annualizedVolatilityPct": 5.92,
+        "sharpeZeroRate": 0.831,
+        "averageExposurePct": 33.38,
+        "trades": 285,
+        "winRatePct": 43.16,
+        "profitFactor": 1.783,
+        "averageTradePct": 2.414,
+        "averageWinPct": 11.569,
+        "averageLossPct": -4.537,
+        "worstTradePct": -15.253,
+        "medianHoldDays": 25
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 118797.89,
+          "totalReturnPct": 18.8,
+          "cagrPct": 4.81,
+          "maxDrawdownPct": 9.07,
+          "calmar": 0.53,
+          "annualizedVolatilityPct": 6.14,
+          "sharpeZeroRate": 0.795,
+          "averageExposurePct": 31.37,
+          "trades": 103,
+          "winRatePct": 40.78,
+          "profitFactor": 1.492,
+          "averageTradePct": 1.445,
+          "averageWinPct": 9.315,
+          "averageLossPct": -3.973,
+          "worstTradePct": -13.245,
+          "medianHoldDays": 23
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 109451.93,
+          "totalReturnPct": 9.45,
+          "cagrPct": 3.08,
+          "maxDrawdownPct": 7.85,
+          "calmar": 0.392,
+          "annualizedVolatilityPct": 5.46,
+          "sharpeZeroRate": 0.582,
+          "averageExposurePct": 28.97,
+          "trades": 83,
+          "winRatePct": 37.35,
+          "profitFactor": 1.504,
+          "averageTradePct": 2.57,
+          "averageWinPct": 14.831,
+          "averageLossPct": -4.74,
+          "worstTradePct": -11.614,
+          "medianHoldDays": 23
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 120376.42,
+          "totalReturnPct": 20.38,
+          "cagrPct": 7.61,
+          "maxDrawdownPct": 6.39,
+          "calmar": 1.191,
+          "annualizedVolatilityPct": 6.1,
+          "sharpeZeroRate": 1.243,
+          "averageExposurePct": 41.56,
+          "trades": 99,
+          "winRatePct": 50.51,
+          "profitFactor": 2.256,
+          "averageTradePct": 3.291,
+          "averageWinPct": 11.44,
+          "averageLossPct": -5.025,
+          "worstTradePct": -15.253,
+          "medianHoldDays": 30
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 218,
+          "common_atr_stop": 61,
+          "end_of_data": 6
+        },
+        "pnlByYear": {
+          "2017": -859.93,
+          "2018": 3029.72,
+          "2019": -7225.71,
+          "2020": 14647.47,
+          "2021": 12831,
+          "2022": -359.51,
+          "2023": -378.14,
+          "2024": 23918.47,
+          "2025": 3218.39,
+          "2026": 5722.88
+        },
+        "profitableYears": 6,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 6,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "BMY",
+            "pnl": 7482.53
+          },
+          {
+            "symbol": "AAPL",
+            "pnl": 6200.69
+          },
+          {
+            "symbol": "SPG",
+            "pnl": 5108.03
+          },
+          {
+            "symbol": "FDX",
+            "pnl": 4686.78
+          },
+          {
+            "symbol": "PM",
+            "pnl": 4158.66
+          }
+        ]
+      }
+    },
+    {
+      "id": "donchian_20_10",
+      "label": "Donchian 20/10 + ATR",
+      "description": "20일 고가 돌파에 진입하고 10일 저가 또는 ATR 추적선으로 청산",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 138339.87,
+        "totalReturnPct": 38.34,
+        "cagrPct": 3.59,
+        "maxDrawdownPct": 13.39,
+        "calmar": 0.268,
+        "annualizedVolatilityPct": 7.92,
+        "sharpeZeroRate": 0.486,
+        "averageExposurePct": 48.77,
+        "trades": 629,
+        "winRatePct": 40.54,
+        "profitFactor": 1.287,
+        "averageTradePct": 1.132,
+        "averageWinPct": 9.221,
+        "averageLossPct": -4.383,
+        "worstTradePct": -17.296,
+        "medianHoldDays": 19
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 117130.31,
+          "totalReturnPct": 17.13,
+          "cagrPct": 4.4,
+          "maxDrawdownPct": 8.8,
+          "calmar": 0.501,
+          "annualizedVolatilityPct": 7.58,
+          "sharpeZeroRate": 0.606,
+          "averageExposurePct": 48.96,
+          "trades": 233,
+          "winRatePct": 42.92,
+          "profitFactor": 1.281,
+          "averageTradePct": 0.862,
+          "averageWinPct": 7.293,
+          "averageLossPct": -3.972,
+          "worstTradePct": -17.296,
+          "medianHoldDays": 20
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 105916.39,
+          "totalReturnPct": 5.92,
+          "cagrPct": 1.95,
+          "maxDrawdownPct": 13.39,
+          "calmar": 0.145,
+          "annualizedVolatilityPct": 7.44,
+          "sharpeZeroRate": 0.296,
+          "averageExposurePct": 44.82,
+          "trades": 189,
+          "winRatePct": 32.8,
+          "profitFactor": 1.152,
+          "averageTradePct": 0.696,
+          "averageWinPct": 11.514,
+          "averageLossPct": -4.584,
+          "worstTradePct": -13.6,
+          "medianHoldDays": 17
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 112605.34,
+          "totalReturnPct": 12.61,
+          "cagrPct": 4.81,
+          "maxDrawdownPct": 9.03,
+          "calmar": 0.533,
+          "annualizedVolatilityPct": 8.91,
+          "sharpeZeroRate": 0.576,
+          "averageExposurePct": 53.21,
+          "trades": 207,
+          "winRatePct": 44.93,
+          "profitFactor": 1.427,
+          "averageTradePct": 1.834,
+          "averageWinPct": 9.766,
+          "averageLossPct": -4.637,
+          "worstTradePct": -15.226,
+          "medianHoldDays": 19
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 510,
+          "common_atr_stop": 111,
+          "end_of_data": 8
+        },
+        "pnlByYear": {
+          "2017": 77.17,
+          "2018": 294.31,
+          "2019": 4374.09,
+          "2020": 6607.56,
+          "2021": 13359.73,
+          "2022": -7446.05,
+          "2023": 1151.48,
+          "2024": 11420.66,
+          "2025": -6737.88,
+          "2026": 15238.8
+        },
+        "profitableYears": 8,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 8.26,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "TSLA",
+            "pnl": 11530.84
+          },
+          {
+            "symbol": "NVDA",
+            "pnl": 8255.29
+          },
+          {
+            "symbol": "GOOGL",
+            "pnl": 5245.15
+          },
+          {
+            "symbol": "SCHW",
+            "pnl": 3676.06
+          },
+          {
+            "symbol": "ABBV",
+            "pnl": 3621.89
+          }
+        ]
+      }
+    },
+    {
+      "id": "donchian_55_20",
+      "label": "Donchian 55/20 + ATR",
+      "description": "55일 고가 돌파에 진입하고 20일 저가 또는 ATR 추적선으로 청산",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 153814.86,
+        "totalReturnPct": 53.81,
+        "cagrPct": 4.79,
+        "maxDrawdownPct": 14.96,
+        "calmar": 0.32,
+        "annualizedVolatilityPct": 7.86,
+        "sharpeZeroRate": 0.637,
+        "averageExposurePct": 48.64,
+        "trades": 483,
+        "winRatePct": 44.1,
+        "profitFactor": 1.492,
+        "averageTradePct": 1.641,
+        "averageWinPct": 9.702,
+        "averageLossPct": -4.719,
+        "worstTradePct": -15.53,
+        "medianHoldDays": 25
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 116414.28,
+          "totalReturnPct": 16.41,
+          "cagrPct": 4.23,
+          "maxDrawdownPct": 11.19,
+          "calmar": 0.378,
+          "annualizedVolatilityPct": 7.51,
+          "sharpeZeroRate": 0.589,
+          "averageExposurePct": 49,
+          "trades": 175,
+          "winRatePct": 46.86,
+          "profitFactor": 1.416,
+          "averageTradePct": 1.428,
+          "averageWinPct": 7.85,
+          "averageLossPct": -4.234,
+          "worstTradePct": -10.693,
+          "medianHoldDays": 27
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 111541.05,
+          "totalReturnPct": 11.54,
+          "cagrPct": 3.73,
+          "maxDrawdownPct": 14.96,
+          "calmar": 0.249,
+          "annualizedVolatilityPct": 7.76,
+          "sharpeZeroRate": 0.511,
+          "averageExposurePct": 44.51,
+          "trades": 140,
+          "winRatePct": 37.14,
+          "profitFactor": 1.256,
+          "averageTradePct": 1.389,
+          "averageWinPct": 12.358,
+          "averageLossPct": -5.092,
+          "worstTradePct": -13.732,
+          "medianHoldDays": 24
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 119646.17,
+          "totalReturnPct": 19.65,
+          "cagrPct": 7.36,
+          "maxDrawdownPct": 8.74,
+          "calmar": 0.841,
+          "annualizedVolatilityPct": 8.46,
+          "sharpeZeroRate": 0.888,
+          "averageExposurePct": 53.04,
+          "trades": 168,
+          "winRatePct": 47.02,
+          "profitFactor": 1.793,
+          "averageTradePct": 2.071,
+          "averageWinPct": 9.875,
+          "averageLossPct": -4.856,
+          "worstTradePct": -15.53,
+          "medianHoldDays": 23
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 363,
+          "common_atr_stop": 112,
+          "end_of_data": 8
+        },
+        "pnlByYear": {
+          "2017": 3905.68,
+          "2018": -3483.11,
+          "2019": 986.27,
+          "2020": 11407.93,
+          "2021": 12980.61,
+          "2022": -8572.86,
+          "2023": 5727.71,
+          "2024": 14008.32,
+          "2025": 2652.93,
+          "2026": 14201.4
+        },
+        "profitableYears": 8,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 5.51,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "TSLA",
+            "pnl": 7092.73
+          },
+          {
+            "symbol": "INTC",
+            "pnl": 5831.55
+          },
+          {
+            "symbol": "AVGO",
+            "pnl": 5123.41
+          },
+          {
+            "symbol": "MSFT",
+            "pnl": 4610.18
+          },
+          {
+            "symbol": "NVDA",
+            "pnl": 4004.98
+          }
+        ]
+      }
+    },
+    {
+      "id": "donchian_100_40",
+      "label": "Donchian 100/40 + ATR",
+      "description": "100일 고가 돌파에 진입하고 40일 저가 또는 ATR 추적선으로 청산",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 162290.62,
+        "totalReturnPct": 62.29,
+        "cagrPct": 5.4,
+        "maxDrawdownPct": 10.7,
+        "calmar": 0.505,
+        "annualizedVolatilityPct": 7.86,
+        "sharpeZeroRate": 0.711,
+        "averageExposurePct": 48.51,
+        "trades": 456,
+        "winRatePct": 43.86,
+        "profitFactor": 1.543,
+        "averageTradePct": 1.863,
+        "averageWinPct": 10.196,
+        "averageLossPct": -4.647,
+        "worstTradePct": -15.53,
+        "medianHoldDays": 25
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 121758.21,
+          "totalReturnPct": 21.76,
+          "cagrPct": 5.51,
+          "maxDrawdownPct": 10.32,
+          "calmar": 0.534,
+          "annualizedVolatilityPct": 7.52,
+          "sharpeZeroRate": 0.751,
+          "averageExposurePct": 49.09,
+          "trades": 161,
+          "winRatePct": 44.1,
+          "profitFactor": 1.592,
+          "averageTradePct": 1.553,
+          "averageWinPct": 9.139,
+          "averageLossPct": -4.432,
+          "worstTradePct": -10.693,
+          "medianHoldDays": 27
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 119436.28,
+          "totalReturnPct": 19.44,
+          "cagrPct": 6.14,
+          "maxDrawdownPct": 10.7,
+          "calmar": 0.574,
+          "annualizedVolatilityPct": 7.74,
+          "sharpeZeroRate": 0.808,
+          "averageExposurePct": 44.63,
+          "trades": 133,
+          "winRatePct": 39.1,
+          "profitFactor": 1.482,
+          "averageTradePct": 1.965,
+          "averageWinPct": 12.542,
+          "averageLossPct": -4.826,
+          "worstTradePct": -13.732,
+          "medianHoldDays": 26
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 112945.9,
+          "totalReturnPct": 12.95,
+          "cagrPct": 4.94,
+          "maxDrawdownPct": 9.12,
+          "calmar": 0.541,
+          "annualizedVolatilityPct": 8.47,
+          "sharpeZeroRate": 0.615,
+          "averageExposurePct": 52.28,
+          "trades": 162,
+          "winRatePct": 47.53,
+          "profitFactor": 1.561,
+          "averageTradePct": 2.088,
+          "averageWinPct": 9.586,
+          "averageLossPct": -4.704,
+          "worstTradePct": -15.53,
+          "medianHoldDays": 22.5
+        }
+      },
+      "diagnostics": {
+        "byExitReason": {
+          "strategy_exit": 332,
+          "common_atr_stop": 116,
+          "end_of_data": 8
+        },
+        "pnlByYear": {
+          "2017": 1955.52,
+          "2018": 865.13,
+          "2019": -1452.4,
+          "2020": 17502.12,
+          "2021": 16963.2,
+          "2022": -2866.46,
+          "2023": 4597.47,
+          "2024": 15760.9,
+          "2025": -9552.59,
+          "2026": 18517.73
+        },
+        "profitableYears": 7,
+        "observedYears": 10,
+        "largestAbsoluteSymbolContributionPct": 5.94,
+        "topAbsoluteSymbolContributors": [
+          {
+            "symbol": "TSLA",
+            "pnl": 8581.79
+          },
+          {
+            "symbol": "FDX",
+            "pnl": 7849.44
+          },
+          {
+            "symbol": "NVDA",
+            "pnl": 7409.16
+          },
+          {
+            "symbol": "AAPL",
+            "pnl": 7143.13
+          },
+          {
+            "symbol": "INTC",
+            "pnl": 6387.35
+          }
+        ]
+      }
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "spy_60",
+      "label": "SPY 60% + 현금 40%",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 257526.12,
+        "totalReturnPct": 157.68,
+        "cagrPct": 10.84,
+        "maxDrawdownPct": 23.31,
+        "calmar": 0.465,
+        "annualizedVolatilityPct": 13.1,
+        "sharpeZeroRate": 0.854,
+        "averageExposurePct": 72.39,
+        "trades": 1,
+        "winRatePct": 100,
+        "profitFactor": null,
+        "averageTradePct": 262.181,
+        "averageWinPct": 262.181,
+        "averageLossPct": null,
+        "worstTradePct": 262.181,
+        "medianHoldDays": 2312
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 140885.43,
+          "totalReturnPct": 40.89,
+          "cagrPct": 9.79,
+          "maxDrawdownPct": 23.31,
+          "calmar": 0.42,
+          "annualizedVolatilityPct": 13.43,
+          "sharpeZeroRate": 0.763,
+          "averageExposurePct": 64.94,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 124771.91,
+          "totalReturnPct": 24.77,
+          "cagrPct": 7.71,
+          "maxDrawdownPct": 18.75,
+          "calmar": 0.411,
+          "annualizedVolatilityPct": 12.97,
+          "sharpeZeroRate": 0.637,
+          "averageExposurePct": 74.26,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 148671.63,
+          "totalReturnPct": 48.67,
+          "cagrPct": 16.99,
+          "maxDrawdownPct": 15.27,
+          "calmar": 1.113,
+          "annualizedVolatilityPct": 12.75,
+          "sharpeZeroRate": 1.304,
+          "averageExposurePct": 81.06,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        }
+      }
+    },
+    {
+      "id": "spy_100",
+      "label": "SPY 100% + 현금 0%",
+      "overall": {
+        "from": "2017-05-01",
+        "to": "2026-07-13",
+        "endingEquity": 362543.54,
+        "totalReturnPct": 262.91,
+        "cagrPct": 15.04,
+        "maxDrawdownPct": 33.72,
+        "calmar": 0.446,
+        "annualizedVolatilityPct": 18.53,
+        "sharpeZeroRate": 0.852,
+        "averageExposurePct": 100,
+        "trades": 1,
+        "winRatePct": 100,
+        "profitFactor": null,
+        "averageTradePct": 262.181,
+        "averageWinPct": 262.181,
+        "averageLossPct": null,
+        "worstTradePct": 262.181,
+        "medianHoldDays": 2312
+      },
+      "segments": {
+        "development": {
+          "from": "2017-05-01",
+          "to": "2020-12-31",
+          "endingEquity": 168169.65,
+          "totalReturnPct": 68.17,
+          "cagrPct": 15.22,
+          "maxDrawdownPct": 33.72,
+          "calmar": 0.451,
+          "annualizedVolatilityPct": 20.82,
+          "sharpeZeroRate": 0.785,
+          "averageExposurePct": 100,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        },
+        "validation": {
+          "from": "2021-01-04",
+          "to": "2023-12-29",
+          "endingEquity": 134737.61,
+          "totalReturnPct": 34.74,
+          "cagrPct": 10.52,
+          "maxDrawdownPct": 24.5,
+          "calmar": 0.429,
+          "annualizedVolatilityPct": 17.59,
+          "sharpeZeroRate": 0.656,
+          "averageExposurePct": 100,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        },
+        "holdout": {
+          "from": "2024-01-02",
+          "to": "2026-07-13",
+          "endingEquity": 163285.75,
+          "totalReturnPct": 63.29,
+          "cagrPct": 21.41,
+          "maxDrawdownPct": 18.76,
+          "calmar": 1.142,
+          "annualizedVolatilityPct": 15.88,
+          "sharpeZeroRate": 1.31,
+          "averageExposurePct": 100,
+          "trades": 0,
+          "winRatePct": null,
+          "profitFactor": 0,
+          "averageTradePct": null,
+          "averageWinPct": null,
+          "averageLossPct": null,
+          "worstTradePct": null,
+          "medianHoldDays": null
+        }
+      }
+    }
+  ]
+}
